@@ -25,6 +25,7 @@
         <module>clean-inventory</module>
         <module>clean-search</module>
         <module>clean-payment</module>
+        <module>clean-common</module>
     </modules>
 
     <properties>
