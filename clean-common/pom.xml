@@ -17,6 +17,7 @@
         <module>clean-starter-web</module>
         <module>clean-starter-mybatis</module>
         <module>clean-starter-redis</module>
+        <module>clean-starter-swagger</module>
     </modules>
 
 </project>

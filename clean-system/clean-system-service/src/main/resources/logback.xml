@@ -26,4 +26,8 @@
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
+
+    <logger name="com.alibaba.druid.filter.logging.Slf4jLogFilter" level="DEBUG"/>
+    <logger name="com.alibaba.druid.filter.logging.Slf4jLogFilter.statementLog" level="DEBUG"/> <!-- SQL日志 -->
+    <logger name="com.alibaba.druid.filter.logging.Slf4jLogFilter.statementLogError" level="ERROR"/> <!-- 错误SQL -->
 </configuration>
