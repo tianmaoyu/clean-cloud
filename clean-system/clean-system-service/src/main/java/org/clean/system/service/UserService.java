@@ -3,6 +3,8 @@ package org.clean.system.service;
 
 import org.clean.system.entity.User;
 
+import java.util.List;
+
 /**
 * @author eric
 * @description 针对表【user】的数据库操作Service
@@ -18,4 +20,7 @@ public interface UserService  {
     User getById(Long id);
 
     User save(User user);
+
+    List<User> setAll();
+
 }

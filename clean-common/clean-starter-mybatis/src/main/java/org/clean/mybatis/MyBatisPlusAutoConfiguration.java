@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import org.apache.ibatis.exceptions.IbatisException;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.clean.common.tenum.IEnum;
+import org.clean.tenum.IEnum;
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -10,6 +10,6 @@
     </parent>
 
     <artifactId>clean-starter-tenum</artifactId>
-    <packaging> jar</packaging>
+    <packaging>jar</packaging>
 
 </project>

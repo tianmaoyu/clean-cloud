@@ -1,4 +1,4 @@
-package org.clean.common.tenum;
+package org.clean.tenum;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

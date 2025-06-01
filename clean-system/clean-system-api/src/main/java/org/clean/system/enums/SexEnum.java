@@ -1,5 +1,5 @@
 package org.clean.system.enums;
-import org.clean.common.tenum.IEnum;
+import org.clean.tenum.IEnum;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;

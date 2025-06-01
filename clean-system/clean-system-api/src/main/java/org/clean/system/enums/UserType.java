@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.clean.common.tenum.IEnum;
+import org.clean.tenum.IEnum;
 
 @ApiModel("用户类型")
 @Getter

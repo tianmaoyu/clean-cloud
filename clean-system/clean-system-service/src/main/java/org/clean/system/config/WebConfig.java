@@ -1,6 +1,6 @@
 package org.clean.system.config;
 
-import org.clean.common.tenum.TEnumConverter;
+import org.clean.tenum.TEnumConverter;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

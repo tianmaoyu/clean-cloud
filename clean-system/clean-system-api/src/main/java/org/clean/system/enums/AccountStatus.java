@@ -4,7 +4,7 @@ package org.clean.system.enums;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
- import org.clean.common.tenum.IEnum;
+ import org.clean.tenum.IEnum;
 
 import java.util.Arrays;
 

@@ -22,4 +22,5 @@ public interface AccountService {
 
     int delete(Integer id);
 
+    Account getByName(String name);
 }

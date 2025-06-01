@@ -1,6 +1,6 @@
 package org.clean.swagger;
 
-import org.clean.common.tenum.IEnum;
+import org.clean.tenum.IEnum;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.schema.Model;

@@ -39,6 +39,11 @@ public class AccountServiceImpl  implements AccountService {
     public int delete(Integer id) {
         return accountMapper.delete(id);
     }
+
+    @Override
+    public Account getByName(String name) {
+      return   accountMapper.getByName(name);
+    }
 }
 
 

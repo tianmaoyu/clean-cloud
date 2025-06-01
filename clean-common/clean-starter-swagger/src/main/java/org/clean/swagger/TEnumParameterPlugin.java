@@ -2,7 +2,7 @@ package org.clean.swagger;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;
-import org.clean.common.tenum.IEnum;
+import org.clean.tenum.IEnum;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.schema.Example;

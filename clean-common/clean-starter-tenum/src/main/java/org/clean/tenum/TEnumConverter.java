@@ -1,4 +1,4 @@
-package org.clean.common.tenum;
+package org.clean.tenum;
 
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;

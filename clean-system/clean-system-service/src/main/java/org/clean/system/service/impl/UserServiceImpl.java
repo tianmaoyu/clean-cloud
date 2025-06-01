@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author eric
@@ -62,6 +63,11 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         userMapper.insert(user);
         return user;
+    }
+
+    @Override
+    public List<User> setAll() {
+       return userMapper.selectList(null);
     }
 
     @SneakyThrows
