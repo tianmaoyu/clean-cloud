@@ -1,0 +1,36 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: clean-system-service
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true
+      application:
+        name: demo-service
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+      config:
+        namespace: public
+        server-addr: localhost:8848
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+tlog:
+  pattern: $preApp-$preHost-$preIp-$spanId-$traceId
+

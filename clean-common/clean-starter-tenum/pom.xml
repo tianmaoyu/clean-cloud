@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>clean-starter-enum</artifactId>
+    <artifactId>clean-starter-tenum</artifactId>
     <packaging> jar</packaging>
 
 </project>

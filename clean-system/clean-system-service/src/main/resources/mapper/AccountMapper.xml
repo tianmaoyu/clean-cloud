@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.clean.system.mapper.AccountMapper">
+
+    <resultMap id="BaseResultMap" type="org.clean.system.entity.Account">
+            <id property="id" column="id" />
+            <result property="userName" column="user_name" />
+            <result property="age" column="age" />
+            <result property="birthday" column="birthday" />
+            <result property="accountStatus" column="account_status" />
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select *
+        from account
+        where id = #{id}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *  from account
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into
+             account(user_name,age,birthday,account_status)
+             values(#{userName},#{age},#{birthday},#{accountStatus})
+    </insert>
+    <update id="update">
+        update account
+        set user_name = #{userName},
+            age = #{age},
+            birthday = #{birthday},
+            account_status = #{accountStatus}
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from account
+        where id = #{id}
+    </delete>
+</mapper>

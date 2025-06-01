@@ -12,7 +12,7 @@
     <artifactId>clean-common</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>clean-starter-enum</module>
+        <module>clean-starter-tenum</module>
         <module>clean-starter-core</module>
         <module>clean-starter-web</module>
         <module>clean-starter-mybatis</module>
