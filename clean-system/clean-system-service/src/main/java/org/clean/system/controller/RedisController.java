@@ -24,7 +24,7 @@ public class RedisController {
     private UserService userService ;
 
      @GetMapping("/getUser")
-     public User get(@RequestParam("id") Long id){
+     public User getUser(@RequestParam("id") Long id){
          String key = KEY_PREFIX + id;
          var cacheUser= (User) redisTemplate.opsForValue().get(key);
          if(cacheUser!=null) return cacheUser;

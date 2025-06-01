@@ -27,8 +27,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/getById")
-    public User getById(){
-        User user = userService.getById(1L);
+    public User getById(@RequestParam("id") Long id){
+        User user = userService.getById(id);
         return user;
     }
 

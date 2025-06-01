@@ -6,12 +6,18 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import lombok.extern.slf4j.Slf4j;
+import org.clean.system.entity.User;
+import org.clean.system.feign.RedisFeignClient;
+import org.clean.system.feign.UserFeignClient;
+import org.clean.system.param.UserAddParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -23,7 +29,27 @@ import java.util.Locale;
 @RequestMapping("/hello")
 public class HellController {
 
+    @Autowired
+    private UserFeignClient userFeignClient;
+    @Autowired
+    private RedisFeignClient redisFeignClient;
 
+    @GetMapping("/getUser")
+     public User getUser(@RequestParam("id") Long id) {
+
+        User user = userFeignClient.getById(id);
+        return user;
+    }
+    @GetMapping("/getUser_Redis")
+    public User getUser_Redis(@RequestParam("id") Long id) {
+        User user = redisFeignClient.getById(id);
+        return user;
+    }
+
+    @PostMapping("/user/add")
+    public User add(@RequestBody @Valid UserAddParam param){
+        return userFeignClient.add(param);
+    }
 
 //    @Autowired
 //    private UserConvert userConvert;

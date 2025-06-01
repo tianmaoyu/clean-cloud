@@ -55,7 +55,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value("test_user"));
 
-        assertThat(userController.getById()).isEqualTo(mockUser);
+        assertThat(userController.getById(1L)).isEqualTo(mockUser);
     }
 
     @Test

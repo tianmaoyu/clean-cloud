@@ -12,12 +12,40 @@
     <artifactId>clean-example-service</artifactId>
     <packaging>jar</packaging>
 
-
     <dependencies>
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-system-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-starter-swagger</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-starter-mybatis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-starter-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-starter-redis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
 <!--        <dependency>-->
@@ -131,6 +159,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-core</artifactId>
             <version>2.10.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-system-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
