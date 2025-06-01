@@ -27,6 +27,17 @@
             <artifactId>clean-starter-mybatis</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-starter-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-starter-redis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.reflections</groupId>

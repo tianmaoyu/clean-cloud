@@ -11,6 +11,12 @@
 
     <artifactId>clean-starter-redis</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>
