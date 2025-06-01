@@ -8,10 +8,13 @@ import org.clean.system.enums.UserStatus;
 import org.clean.system.param.UserAddParam;
 import org.clean.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Slf4j
 @RestController
@@ -30,12 +33,15 @@ public class UserController {
     }
 
     //add
+
     @PostMapping("/add")
-    public User add(@RequestBody UserAddParam param){
+    public User add(@RequestBody @Valid UserAddParam param){
         User user = new User();
         user.setName(param.getName());
         user.setAge(param.getAge());
         user.setEmail(param.getEmail());
+        user.setUserType(param.getUserType());
+        user.setSex(param.getSex());
         userService.save(user);
         return user;
     }
