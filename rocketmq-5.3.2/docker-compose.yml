@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  namesrv:
+    image: apache/rocketmq:5.3.2
+    container_name: rmqnamesrv
+    ports:
+      - "9876:9876"
+    networks:
+      - rocketmq
+    command: ["sh", "mqnamesrv"]
+    restart: unless-stopped
+
+  broker:
+    image: apache/rocketmq:5.3.2
+    container_name: rmqbroker
+    ports:
+      - "10909:10909"
+      - "10911:10911"
+      - "10912:10912"
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+      # 设置 Broker 外部可访问的 IP（使用宿主机局域网 IP）
+      - BROKER_IP1=192.168.2.23
+    volumes:
+      # 挂载自定义 broker.conf（见下方说明）
+      - ./broker.conf:/home/rocketmq/rocketmq-5.3.2/conf/broker.conf
+    depends_on:
+      - namesrv
+    networks:
+      - rocketmq
+    command: ["sh", "mqbroker", "-c", "/home/rocketmq/rocketmq-5.3.2/conf/broker.conf"]
+    restart: unless-stopped
+
+  dashboard:
+    image: apacherocketmq/rocketmq-dashboard:latest
+    container_name: rmq-dashboard
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=rmqnamesrv:9876 -Dserver.port=8080
+    depends_on:
+      - namesrv
+      - broker
+    networks:
+      - rocketmq
+    restart: unless-stopped
+
+networks:
+  rocketmq:
+    driver: bridge

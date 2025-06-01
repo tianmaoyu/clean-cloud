@@ -34,3 +34,9 @@ management:
 tlog:
   pattern: $preApp-$preHost-$preIp-$spanId-$traceId
 
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: my-producer-group
+    send-message-timeout: 3000
+
