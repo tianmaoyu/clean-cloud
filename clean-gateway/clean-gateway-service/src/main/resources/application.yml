@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+
+  application:
+    name: clean-gateway-service
+  main:
+    web-application-type=reactive: reactive
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+        ephemeral: false # 永久节点,当服务停止时，不会自动注销该节点。
+      config:
+        namespace: public
+        server-addr: localhost:8848
+
+    gateway:
+      routes:
+        - id: clean-example-service
+          uri: lb://clean-example-service      # lb:// 表示负载均衡
+          predicates:
+            - Path=/api/example/**
+            - Method=GET,POST
+          filters:
+            - RewritePath=/api/example/(?<segment>.*), /$\{segment} #正在表达式捕获重写
+
+        - id: clean-system-service
+          uri: lb://clean-system-service
+          predicates:
+            - Path=/api/system/**
+            - Method=GET,POST
+          filters:
+            - RewritePath=/api/system/(?<segment>.*), /$\{segment}
+
+
+
+# Actuator 监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
