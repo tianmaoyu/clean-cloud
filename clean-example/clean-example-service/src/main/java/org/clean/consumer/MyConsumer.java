@@ -11,6 +11,8 @@ public class MyConsumer implements RocketMQListener<String> {
 
     @Override
     public void onMessage(String user) {
-        System.out.println("收到消息：" + user);
+       System.out.println("收到消息：" + user);
+        throw new RuntimeException();
+
     }
 }

@@ -19,7 +19,6 @@ public class RocketMQProducer {
 
     @SneakyThrows
     public void sendMessage(String topic, Object message) {
-        String json = objectMapper.writeValueAsString(message);
-        rocketMQTemplate.convertAndSend(topic, json);
+        rocketMQTemplate.convertAndSend(topic, message);
     }
 }
