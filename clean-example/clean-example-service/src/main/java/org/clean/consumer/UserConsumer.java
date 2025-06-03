@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RocketMQMessageListener(
         topic = "topic-test-user",
-        consumerGroup = "my-consumer-group"
+        consumerGroup = "my-consumer-group",
+        maxReconsumeTimes = 3
 )
 public class UserConsumer implements RocketMQListener<User> {
     @Override
     public void onMessage(User user) {
        System.out.println("收到消息：" + user);
+        throw new RuntimeException();
     }
 }
