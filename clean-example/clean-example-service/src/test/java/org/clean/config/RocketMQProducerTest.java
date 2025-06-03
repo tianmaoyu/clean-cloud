@@ -1,5 +1,9 @@
 package org.clean.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.clean.system.entity.User;
 import org.clean.system.enums.SexEnum;
 import org.clean.system.enums.UserType;
@@ -7,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,9 +20,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class RocketMQProducerTest {
 
     @Autowired
-    private RocketMQProducer rocketMQProducer;
+    private RocketMQTemplate rocketMQTemplate;
+
+    @Autowired
+   private ObjectMapper  objectMapper;
     @Test
-    void sendMessage() {
+    void sendMessage() throws JsonProcessingException {
 
         User user = new User();
         user.setName("eric");
@@ -31,6 +39,6 @@ class RocketMQProducerTest {
         user.setSex(SexEnum.MALE);
         user.setId(1L);
 
-        rocketMQProducer.sendMessage("topic-test-user", user);
+        rocketMQTemplate.convertAndSend("topic-test-user", user);
     }
 }

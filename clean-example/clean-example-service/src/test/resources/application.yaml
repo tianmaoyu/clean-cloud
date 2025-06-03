@@ -1,5 +1,5 @@
 server:
-  port: 9001
+  port: 19001
 spring:
   application:
     name: clean-example-service
@@ -37,8 +37,8 @@ tlog:
 rocketmq:
   name-server: localhost:9876
   producer:
-    group: ${spring.application.name}
+    group: my-producer-group
     send-message-timeout: 3000
-  consumer:
-    group: ${spring.application.name}
+
+
 
