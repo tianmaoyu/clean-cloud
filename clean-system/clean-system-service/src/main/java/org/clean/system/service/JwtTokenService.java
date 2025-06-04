@@ -42,7 +42,8 @@ public class JwtTokenService {
     private String buildToken(User userDetails, Long expiration) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userDetails.getId());
-
+        claims.put("userId", userDetails.getName());
+        claims.put("email", userDetails.getEmail());
         
         return Jwts.builder()
                 .setClaims(claims)
