@@ -25,7 +25,7 @@ spring:
             - Path=/api/example/**
             - Method=GET,POST
           filters:
-            - RewritePath=/api/example/(?<segment>.*), /$\{segment} #正在表达式捕获重写
+            - RewritePath=/api/example/(?<segment>.*), /$\{segment} #正在表达式捕获重写 也可以使用   - StripPrefix=2
 
         - id: clean-system-service
           uri: lb://clean-system-service
