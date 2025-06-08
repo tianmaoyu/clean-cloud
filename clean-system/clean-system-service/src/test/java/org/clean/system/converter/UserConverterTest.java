@@ -26,6 +26,7 @@ class UserConverterTest {
         User user = userService.getById(1L);
         UserParam param = userConverter.toParam(user);
         log.info("param:{}",param);
-        assertNotNull(param);
+        //这个字段是字符串
+        assertEquals(String.class,param.getUpdateTime().getClass());
     }
 }

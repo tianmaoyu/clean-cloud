@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+// todo 枚举 是显示的是 desc
+// todo 两个对象 合成一个对象
 @Mapper(componentModel = "spring")
 public interface UserConverter {
     UserParam toParam(User entity);
