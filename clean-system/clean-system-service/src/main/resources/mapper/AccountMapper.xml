@@ -25,14 +25,15 @@
              account(user_name,age,birthday,account_status)
              values(#{userName},#{age},#{birthday},#{accountStatus})
     </insert>
-    <update id="update">
-        update account
-        set user_name = #{userName},
-            age = #{age},
-            birthday = #{birthday},
-            account_status = #{accountStatus}
-        where id = #{id}
-    </update>
+<!--    不能有一个update-->
+<!--    <update id="update">-->
+<!--        update account-->
+<!--        set user_name = #{userName},-->
+<!--            age = #{age},-->
+<!--            birthday = #{birthday},-->
+<!--            account_status = #{accountStatus}-->
+<!--        where id = #{id}-->
+<!--    </update>-->
     <delete id="delete">
         delete from account
         where id = #{id}

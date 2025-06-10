@@ -16,7 +16,7 @@ public class AccountMapperTest {
     @Test
     void updateAge() {
         Account account = accountMapper.selectById(1);
-        Boolean b = accountMapper.updateAge(10, account.getId());
+        Boolean b = accountMapper.updateAge(9, account.getId());
         assertTrue(b);
     }
 }

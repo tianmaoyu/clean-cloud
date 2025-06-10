@@ -33,7 +33,8 @@ public class AccountServiceImpl  implements AccountService {
     }
     @Override
     public int update(Account account) {
-        return accountMapper.update(account);
+        boolean b = accountMapper.insertOrUpdate(account);
+        return 1;
     }
     @Override
     public int delete(Integer id) {

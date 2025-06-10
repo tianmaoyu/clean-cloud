@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWra
 import org.apache.ibatis.annotations.Mapper;
 import org.clean.system.entity.Account;
 import org.clean.system.entity.User;
+import org.clean.system.enums.AccountStatus;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public interface AccountMapper extends BaseMapper<Account> {
         return lambdaUpdate()
                 .eq(Account::getId, id)
                 .set(Account::getAge, age)
+                .set(Account::getAccountStatus, AccountStatus.ENABLED)
                 .update(new Account());
     }
 
