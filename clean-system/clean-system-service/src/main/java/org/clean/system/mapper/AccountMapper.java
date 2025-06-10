@@ -25,6 +25,13 @@ public interface AccountMapper extends BaseMapper<Account> {
         return new LambdaQueryChainWrapper<>(this);
     }
 
+    default Boolean updateAge(Integer age, Integer id){
+        return lambdaUpdate()
+                .eq(Account::getId, id)
+                .set(Account::getAge, age)
+                .update(new Account());
+    }
+
     List<Account> selectAll();
     Account selectById(Integer id);
     int insert(Account account);

@@ -47,3 +47,8 @@ tlog:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis:
+  configuration:
+    use-actual-param-name: true
+
