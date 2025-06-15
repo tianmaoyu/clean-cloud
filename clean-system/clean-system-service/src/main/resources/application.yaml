@@ -44,11 +44,11 @@ tlog:
   pattern: $preApp-$preHost-$preIp-$spanId-$traceId
 
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-mybatis:
-  configuration:
-    use-actual-param-name: true
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#
+#mybatis:
+#  configuration:
+#    use-actual-param-name: true
 

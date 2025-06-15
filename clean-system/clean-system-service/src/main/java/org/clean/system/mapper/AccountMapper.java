@@ -37,7 +37,8 @@ public interface AccountMapper extends BaseMapper<Account> {
     List<Account> selectAll();
     Account selectById(Integer id);
     int insert(Account account);
-    int update(Account account);
+    //不能和上面重复
+//    int update(Account account);
     int delete(Integer id);
 
     default Account getByName(String name){
