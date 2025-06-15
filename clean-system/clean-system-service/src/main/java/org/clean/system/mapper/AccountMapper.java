@@ -1,6 +1,8 @@
 package org.clean.system.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,6 +29,13 @@ public interface AccountMapper extends BaseMapper<Account> {
     }
 
     default Boolean updateAge(Integer age, Integer id){
+//        LambdaQueryWrapper<Account> lambdaWrapper = Wrappers.lambdaQuery();
+//        List<Account> users = new LambdaQueryChainWrapper<>(this)
+//                .like(Account::getUserName, "张")
+//                .gt(Account::getAge, 18)
+//                .orderByDesc(Account::getBirthday)
+//                .list();
+
         return lambdaUpdate()
                 .eq(Account::getId, id)
                 .set(Account::getAge, age)

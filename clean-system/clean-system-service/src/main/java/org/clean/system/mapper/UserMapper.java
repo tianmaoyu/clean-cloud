@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.clean.mybatis.BatchUtils;
 import org.clean.system.entity.User;
 import org.clean.system.enums.UserType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Mapper
@@ -25,6 +27,12 @@ public interface UserMapper extends BaseMapper<User> {
         return this.selectById(id);
 
     }
+
+    default Boolean insertBatch(List<User> users){
+        Boolean success = BatchUtils.insertBatch(this, users);
+        return success;
+    }
+
 
     default Boolean updateEmail(String email, Long id) {
         return lambdaUpdate()
