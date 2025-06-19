@@ -100,3 +100,10 @@ INSERT INTO dict_item (dict_id, label, value, order_num) VALUES
                                                              (2, '未知', '0', 3);
 
 SELECT setval('dict_item_id_seq', (SELECT MAX(id) FROM dict_item));
+
+
+CREATE TABLE products (
+                          id SERIAL PRIMARY KEY,
+                          name TEXT NOT NULL,
+                          details JSONB
+);
