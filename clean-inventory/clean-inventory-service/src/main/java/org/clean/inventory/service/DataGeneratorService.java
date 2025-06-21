@@ -149,7 +149,7 @@ public class DataGeneratorService {
             throw new RuntimeException("No categories found, please generate categories first");
         }
 
-        int batchSize = 1000; // 每批处理数量
+        int batchSize = 5000; // 每批处理数量
         long batchCount = totalCount / batchSize;
 
         // 创建线程池 (根据CPU核心数调整)
