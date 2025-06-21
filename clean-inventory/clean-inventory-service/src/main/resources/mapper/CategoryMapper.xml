@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.clean.inventory.mapper.CategoryMapper">
+
+    <insert id="insertBatchSomeColumn" parameterType="java.util.List">
+        INSERT INTO category
+        (name, parent_id, category_type, description, attribute_schema, active_flag, created_at, updated_at)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name},
+            #{item.parentId},
+            #{item.categoryType},
+            #{item.description},
+            #{item.attributeSchema}::jsonb,
+            #{item.activeFlag},
+            #{item.createdAt},
+            #{item.updatedAt})
+        </foreach>
+    </insert>
+
+</mapper>

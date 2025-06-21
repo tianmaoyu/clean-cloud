@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.clean.inventory.mapper.ProductMapper">
+
+    <insert id="insertBatchSomeColumn" parameterType="java.util.List">
+        INSERT INTO product
+        (code, name, category_id, brand_id, price, cost, stock_quantity, weight,
+        active_flag, created_at, updated_at, description, image_url, tags, attributes)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.code}, #{item.name}, #{item.categoryId}, #{item.brandId}, #{item.price}, #{item.cost},
+            #{item.stockQuantity}, #{item.weight}, #{item.activeFlag}, #{item.createdAt}, #{item.updatedAt},
+            #{item.description}, #{item.imageUrl}, #{item.tags}, #{item.attributes}::jsonb)
+        </foreach>
+    </insert>
+
+</mapper>
