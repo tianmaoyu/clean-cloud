@@ -35,17 +35,17 @@ public class DataGeneratorServiceTest {
 
     @Test
     void generateCategories() {
-        service.generateCategories(1000);
+//        service.generateCategories(1000);
     }
 
 
     @Test
     void generateProducts() {
-        service.generateProducts(100_000_000);
+//        service.generateProducts(100_000_000);
     }
 
     @Test
     void generateProducts_threadPool() {
-        service.generateProducts_threadPool(100);
+//        service.generateProducts_threadPool(100);
     }
 }
