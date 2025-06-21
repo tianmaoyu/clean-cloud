@@ -18,9 +18,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -139,6 +137,79 @@ public class DataGeneratorService {
         log.info("Generated {} products in {} ms", totalCount, stopWatch.getTotalTimeMillis());
     }
 
+    public void generateProducts_threadPool(long totalCount) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        // 获取所有类别ID
+        List<Long> categoryIds = categoryMapper.selectList(new QueryWrapper<Category>().select("id"))
+                .stream().map(Category::getId).collect(Collectors.toList());
+
+        if (categoryIds.isEmpty()) {
+            throw new RuntimeException("No categories found, please generate categories first");
+        }
+
+        int batchSize = 1000; // 每批处理数量
+        long batchCount = totalCount / batchSize;
+
+        // 创建线程池 (根据CPU核心数调整)
+        int corePoolSize = Runtime.getRuntime().availableProcessors();
+        ExecutorService executor = Executors.newFixedThreadPool(corePoolSize);
+
+        // 用于跟踪所有异步任务
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        // 多线程处理每个批次
+        for (int batch = 0; batch < batchCount; batch++) {
+            final int currentBatch = batch;
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                List<Product> products = new ArrayList<>(batchSize);
+
+                // 生成当前批次的所有产品
+                for (int i = 0; i < batchSize; i++) {
+                    long index = currentBatch * batchSize + i;
+                    products.add(generateRandomProduct(categoryIds, index));
+                }
+
+                // 批量插入当前批次
+                productMapper.insertBatchSomeColumn(products);
+                log.info("Generated batch {} ({} products) by thread {}",
+                        currentBatch, batchSize, Thread.currentThread().getName());
+            }, executor);
+
+            futures.add(future);
+        }
+
+        // 处理剩余产品（总数量不是batchSize的整数倍时）
+        long remaining = totalCount % batchSize;
+        if (remaining > 0) {
+            CompletableFuture<Void> lastFuture = CompletableFuture.runAsync(() -> {
+                List<Product> products = new ArrayList<>((int)remaining);
+                for (int i = 0; i < remaining; i++) {
+                    long index = batchCount * batchSize + i;
+                    products.add(generateRandomProduct(categoryIds, index));
+                }
+                productMapper.insertBatchSomeColumn(products);
+                log.info("Generated last batch ({} products) by thread {}",
+                        remaining, Thread.currentThread().getName());
+            }, executor);
+
+            futures.add(lastFuture);
+        }
+
+        // 等待所有任务完成
+        try {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error during product generation", e);
+            Thread.currentThread().interrupt();
+        } finally {
+            executor.shutdown();
+        }
+
+        stopWatch.stop();
+        log.info("Generated {} products in {} ms", totalCount, stopWatch.getTotalTimeMillis());
+    }
     private Product generateRandomProduct(List<Long> categoryIds, long index) {
         Long categoryId = categoryIds.get(RandomUtils.nextInt(0, categoryIds.size()));
         String categoryType = categoryMapper.selectById(categoryId).getCategoryType();

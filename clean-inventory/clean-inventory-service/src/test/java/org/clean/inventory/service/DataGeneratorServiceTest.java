@@ -38,8 +38,14 @@ public class DataGeneratorServiceTest {
         service.generateCategories(1000);
     }
 
+
     @Test
     void generateProducts() {
         service.generateProducts(100_000_000);
+    }
+
+    @Test
+    void generateProducts_threadPool() {
+        service.generateProducts_threadPool(100);
     }
 }
