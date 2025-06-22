@@ -29,7 +29,7 @@ public class DataGeneratorServiceTest {
 
     @Test
     void product() {
-        Product product = productMapper.selectById(1);
+        Product product = productMapper.selectById(121111);
         assertNull(product);
     }
 
