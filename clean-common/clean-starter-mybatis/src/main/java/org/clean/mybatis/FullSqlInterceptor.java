@@ -34,7 +34,7 @@ import java.util.*;
         args = {Statement.class}
 )})
 @Slf4j
-//@Component
+@Component
 public class FullSqlInterceptor implements Interceptor {
 
     private static final Logger slowSqlLog = LoggerFactory.getLogger("MyBatisInterceptor.SlowSqlLog");

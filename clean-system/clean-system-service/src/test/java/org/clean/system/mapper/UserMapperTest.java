@@ -69,4 +69,23 @@ public class UserMapperTest {
         long timing = System.currentTimeMillis() - start;
         log.info("【--------】实际执行耗时: {}ms", timing);
     }
+
+    @Transactional
+    @Test
+    void insertBatch3() {
+
+        List<User> userList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            User user = new User();
+            user.setName("insertBatch-eric"+i);
+            user.setAge(i);
+            user.setEmail("insertBatch-eric"+i+"@qq.com");
+            userList.add(user);
+        }
+
+        for (User user : userList) {
+            userMapper.insert(user);
+        }
+
+    }
 }
