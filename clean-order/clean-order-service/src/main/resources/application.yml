@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  application:
+    name: clean-order-service
+
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  global-config:
+#    db-config:
+
+server:
+  port: 9000
+
+
+
+debezium:
+  topic-prefix: "mac_db_"
+  connector-name: "springboot-embedded-cdc"
+  host: ${DB_HOST:localhost}
+  port: ${DB_PORT:5432}
+  user: ${DB_USER:postgres}
+  password: ${DB_PASSWORD:123456}
+  database: ${DB_NAME:postgres}
+  server-name: "app-server"
+  offset-file: "./data/offset.dat"
+  history-file: "./data/history.dat"
+  table-include-list: "public.local_category,public.test"
+  slot-name: "app_slot"
+  publication-name: "mac_db_"
+  snapshot-mode: "initial" # 可选: initial, never, when_needed
