@@ -16,80 +16,61 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Component
 public class ChangeEventHandler {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ChangeEventHandler.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     // 用于幂等处理的LSN缓存
     private final Set<String> processedLsn = ConcurrentHashMap.newKeySet();
-    
+
     public void handleEvent(ChangeEvent<String, String> event) {
+
+        logger.info(" event: {}", event.toString());
+
+        String key = event.key();
+        String value = event.value();
+        String destination = event.destination();
+
+        // 添加JSON解析
         try {
-//            JsonNode eventValue = objectMapper.readTree(event.value());
-//            String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(event);
-            logger.info(" event: {}", event.toString());
+            JsonNode eventJson = objectMapper.readTree(value);
+            logger.info("解析后的JSON: {}", eventJson);
+            // 提取核心字段
+            JsonNode payload = eventJson.path("payload");
+            String operation = payload.path("op").asText();
+            String lsn = payload.path("source").path("lsn").asText();
+            String table = payload.path("source").path("table").asText();
             
-            // 获取唯一标识 (LSN for PostgreSQL)
-//            String lsn = eventValue.path("source").path("lsn").asText();
-//            String operation = eventValue.path("op").asText();
-//            String table = eventValue.path("source").path("table").asText();
+            // 提取新旧数据
+            JsonNode before = payload.path("before");
+            JsonNode after = payload.path("after");
             
-//            // 幂等性检查
-//            if (processedLsn.contains(lsn)) {
-//                logger.debug("Skipping duplicate event with LSN: {}", lsn);
-//                return;
-//            }
-            
-//            // 处理不同操作类型
-//            switch (operation) {
-//                case "c": // Create
-//
-//                    break;
-//                case "u": // Update
-//
-//                    break;
-//                case "d": // Delete
-//
-//                    break;
-//                case "r": // Read (snapshot)
-//
-//                    break;
-//                default:
-////                    logger.warn("Unknown operation type: {}", operation);
-//            }
-            
-//            // 记录已处理的LSN
-//            processedLsn.add(lsn);
-//
-//            // 定期清理缓存 (实际项目中可使用定时任务)
-//            if (processedLsn.size() > 10000) {
-//                processedLsn.clear();
-//            }
-            
+            logger.info("操作类型: {}, LSN: {}, 表名: {}", operation, lsn, table);
+            logger.info("更新前数据: {}", before);
+            logger.info("更新后数据: {}", after);
+
         } catch (Exception e) {
-            logger.error("Error processing change event: {}", event.value(), e);
+            logger.error("JSON解析失败: {}", value, e);
         }
     }
-    
+
     private void handleCreate(JsonNode data, String table) {
-                logger.info("Create event for table {}: {}", table, data);
+        logger.info("Create event for table {}: {}", table, data);
     }
-    
+
     private void handleUpdate(JsonNode before, JsonNode after, String table) {
         // 实际项目中实现具体更新逻辑
-        logger.info("Update event for table {}: \nBefore: {}\nAfter: {}", 
-                   table, before, after);
+        logger.info("Update event for table {}: \nBefore: {}\nAfter: {}",
+                table, before, after);
     }
-    
+
     private void handleDelete(JsonNode data, String table) {
         logger.info("Delete event for table {}: {}", table, data);
     }
-    
+
     private void handleSnapshot(JsonNode data, String table) {
         logger.info("Snapshot event for table {}: {}", table, data);
     }
-    
 
-    
 
 }

@@ -72,11 +72,11 @@
             <artifactId>debezium-api</artifactId>
             <version>${debezium.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.debezium</groupId>-->
-<!--            <artifactId>debezium-core</artifactId>-->
-<!--            <version>${debezium.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-core</artifactId>
+            <version>${debezium.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.debezium</groupId>
             <artifactId>debezium-embedded</artifactId>
@@ -87,6 +87,13 @@
             <groupId>io.debezium</groupId>
             <artifactId>debezium-connector-postgres</artifactId>
             <version>${debezium.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ververica</groupId>
+            <artifactId>flink-sql-connector-postgres-cdc</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
         </dependency>
 
 
