@@ -91,11 +91,12 @@ public class DebeziumConfig {
         
         // 验证用户权限配置
         props.setProperty("logical.decoding.mode", "logical");
-        
+
         props.setProperty("database.history", FileDatabaseHistory.class.getCanonicalName());
         props.setProperty("database.history.file.filename", "./debezium/history.dat");
 
         // 表过滤配置
+        props.setProperty("include.schema.changes", "true");
         props.setProperty("table.include.list", "public.local_category,public.test,public.newtable2,public.newtable_2,public.newtable_1,public.newtable_3,public.newtable_4");
         props.setProperty("plugin.name", "pgoutput");
         props.setProperty("slot.name", "mac_db_");
