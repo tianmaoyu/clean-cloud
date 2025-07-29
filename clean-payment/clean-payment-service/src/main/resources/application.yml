@@ -17,7 +17,7 @@ spring:
       enable-auto-commit: false
       auto-offset-reset: earliest
     listener:
-      ack-mode: manual_immediate
+      ack-mode: manual_immediate #record
       concurrency: 3
 
 # 添加死信队列相关配置

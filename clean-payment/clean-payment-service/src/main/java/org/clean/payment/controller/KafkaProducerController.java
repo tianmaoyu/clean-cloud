@@ -16,4 +16,9 @@ public class KafkaProducerController {
         kafkaTemplate.send(topic, message);
         return "消息已发送到主题: " + topic;
     }
+    @GetMapping("/mulsend")
+    public String mulsend(@RequestParam String key, @RequestParam String message) {
+        kafkaTemplate.send("mul-partitions", key,message);
+        return "消息已发送到主题: " + key+message;
+    }
 }
