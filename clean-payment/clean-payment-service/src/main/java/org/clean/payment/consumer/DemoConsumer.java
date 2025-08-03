@@ -30,6 +30,8 @@ public class DemoConsumer {
                 new Person("Eve", 30, "London")
         );
 
+        Integer max = Linq.of(people).max(item -> item.age);
+
         // Linq方式 (创建匿名类型)
         var itemList = Linq.of(people)
                 .where(p -> p.age > 25)
