@@ -52,6 +52,11 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "mul-partitions", groupId = "my-group")
     public void listenMul(ConsumerRecord<String, String> record, Acknowledgment ack) {
         log.info("partitions--------接收到消息:key:{} value:{} ",record.key(),record.value());
+        log.info("partitions--------消息的分区:{}",record.partition());
+        log.info("partitions--------消息的offset:{}",record.offset());
+        log.info("partitions--------消息的headers:{}",record.topic());
+        Headers headers = record.headers();
+
 
         Boolean success = doSomething(record.value());
         if( success) {

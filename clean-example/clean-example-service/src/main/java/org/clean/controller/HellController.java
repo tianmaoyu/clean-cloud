@@ -6,6 +6,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.clean.system.entity.User;
 import org.clean.system.feign.RedisFeignClient;
 import org.clean.system.feign.UserFeignClient;
@@ -231,6 +232,14 @@ public class HellController {
 //
 //    }
 
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+
+    @GetMapping("/send")
+    public String sendMessage(@RequestParam String topic, @RequestParam String message) {
+        rocketMQTemplate.convertAndSend(topic, message);
+        return "消息已发送到主题: " + topic;
+    }
 
 }
 
