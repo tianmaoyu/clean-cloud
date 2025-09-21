@@ -20,6 +20,9 @@ public class UserAddParam {
     @ApiModelProperty(value = "年龄", required = true)
     @NotNull
     private Integer age;
+    @ApiModelProperty(value = "密码", required = true)
+    @NotNull
+    private String password;
 
     @ApiModelProperty(value = "邮箱", required = false)
     private String email;

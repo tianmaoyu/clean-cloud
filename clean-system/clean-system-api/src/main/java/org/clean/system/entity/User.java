@@ -17,6 +17,7 @@ public class User {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;
+    private String password;
     private Integer age;
     private String email;
 
@@ -34,4 +35,6 @@ public class User {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+
+
 }

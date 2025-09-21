@@ -38,6 +38,7 @@ public class UserController {
     public User add(@RequestBody @Valid UserAddParam param){
         User user = new User();
         user.setName(param.getName());
+        user.setPassword(param.getPassword());
         user.setAge(param.getAge());
         user.setEmail(param.getEmail());
         user.setUserType(param.getUserType());
