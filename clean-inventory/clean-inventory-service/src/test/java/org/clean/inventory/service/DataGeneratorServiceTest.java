@@ -46,6 +46,6 @@ public class DataGeneratorServiceTest {
 
     @Test
     void generateProducts_threadPool() {
-//        service.generateProducts_threadPool(100);
+        service.generateProducts_threadPool(100_000_000);
     }
 }
