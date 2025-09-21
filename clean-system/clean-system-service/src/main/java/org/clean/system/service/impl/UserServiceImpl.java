@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
         for (int i=0;i<10;i++) {
             User u = new User();
             u.setName("eric"+i);
+            u.setPassword("123456");
             u.setAge(i);
             u.setEmail("eric"+i+"@qq.com");
             users.add(u);

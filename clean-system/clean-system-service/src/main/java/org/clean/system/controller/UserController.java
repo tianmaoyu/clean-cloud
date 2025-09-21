@@ -56,10 +56,7 @@ public class UserController {
     public Integer edit(@RequestBody User user){
        return userService.edit(user);
     }
-    @PostMapping("/edit2")
-    public Integer edit2( User user){
-        return userService.edit(user);
-    }
+
     @PostMapping("/editLambda")
     public Boolean editLambda(@RequestParam("name") String name,@RequestParam("userId") Long userId){
         return userService.editLambda(userId,  name);
