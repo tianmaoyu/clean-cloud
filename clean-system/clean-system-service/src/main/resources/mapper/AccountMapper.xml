@@ -20,11 +20,11 @@
     <select id="selectAll" resultMap="BaseResultMap">
         select *  from account
     </select>
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into
-             account(user_name,age,birthday,account_status)
-             values(#{userName},#{age},#{birthday},#{accountStatus})
-    </insert>
+<!--    <insert id="insert" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into-->
+<!--             account(user_name,age,birthday,account_status)-->
+<!--             values(#{userName},#{age},#{birthday},#{accountStatus})-->
+<!--    </insert>-->
 <!--    不能有一个update-->
 <!--    <update id="update">-->
 <!--        update account-->

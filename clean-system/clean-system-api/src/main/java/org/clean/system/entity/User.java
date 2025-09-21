@@ -23,6 +23,8 @@ public class User {
 
     private UserType userType;
     private SexEnum sex;
+    private Long departmentId;
+
 
     @TableField(fill = FieldFill.INSERT)
     private Long createId;

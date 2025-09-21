@@ -37,7 +37,7 @@ public class UserServiceTest {
     @Test
     void addList() {
         // 测试添加多个用户
-        int count = 3;
+        int count = 30;
         Boolean result = userService.addList(count);
 
         assertThat(result).isTrue();

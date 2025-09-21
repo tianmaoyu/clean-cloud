@@ -2,6 +2,8 @@ package org.clean.system.service.impl;
 
 import lombok.SneakyThrows;
 import org.clean.system.entity.User;
+import org.clean.system.enums.SexEnum;
+import org.clean.system.enums.UserType;
 import org.clean.system.mapper.UserMapper;
 import org.clean.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Override
+
     public Boolean addList(Integer count) {
         ArrayList<User> users = new ArrayList<>();
-        for (int i=0;i<10;i++) {
+        for (int i=0;i<count;i++) {
             User u = new User();
             u.setName("eric"+i);
+            u.setUserType(UserType.USER);
+            u.setSex(SexEnum.MALE);
+            //1-10 之间的 的数
+            u.setDepartmentId((long) (Math.random() * 10 + 1));
             u.setPassword("123456");
             u.setAge(i);
             u.setEmail("eric"+i+"@qq.com");
