@@ -38,22 +38,22 @@ CREATE TABLE "user" (
                         update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-COMMENT ON TABLE "user" IS '用户表';
-COMMENT ON COLUMN "user".id IS '用户ID';
-COMMENT ON COLUMN "user".username IS '用户名';
-COMMENT ON COLUMN "user".password IS '密码';
-COMMENT ON COLUMN "user".real_name IS '真实姓名';
-COMMENT ON COLUMN "user".email IS '邮箱';
-COMMENT ON COLUMN "user".phone IS '手机号';
-COMMENT ON COLUMN "user".avatar IS '头像';
-COMMENT ON COLUMN "user".department_id IS '所属部门ID';
-COMMENT ON COLUMN "user".status IS '状态(0停用 1正常)';
-COMMENT ON COLUMN "user".last_login_time IS '最后登录时间';
-COMMENT ON COLUMN "user".create_time IS '创建时间';
-COMMENT ON COLUMN "user".update_time IS '更新时间';
+COMMENT ON TABLE sys_user IS '用户表';
+COMMENT ON COLUMN sys_user.id IS '用户ID';
+COMMENT ON COLUMN sys_user.name IS '用户名';
+COMMENT ON COLUMN sys_user.password IS '密码';
+COMMENT ON COLUMN sys_user.real_name IS '真实姓名';
+COMMENT ON COLUMN sys_user.email IS '邮箱';
+COMMENT ON COLUMN sys_user.phone IS '手机号';
+COMMENT ON COLUMN sys_user.avatar IS '头像';
+COMMENT ON COLUMN sys_user.department_id IS '所属部门ID';
+COMMENT ON COLUMN sys_user.status IS '状态(0停用 1正常)';
+COMMENT ON COLUMN sys_user.last_login_time IS '最后登录时间';
+COMMENT ON COLUMN sys_user.create_time IS '创建时间';
+COMMENT ON COLUMN sys_user.update_time IS '更新时间';
 
-CREATE UNIQUE INDEX idx_user_username ON "user"(username);
-CREATE INDEX idx_user_department_id ON "user"(department_id);
+CREATE UNIQUE INDEX idx_user_username ON sys_user(name);
+CREATE INDEX idx_user_department_id ON sys_user(department_id);
 
 -- 角色表
 CREATE TABLE role (
@@ -67,17 +67,17 @@ CREATE TABLE role (
                       update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-COMMENT ON TABLE role IS '角色表';
-COMMENT ON COLUMN role.id IS '角色ID';
-COMMENT ON COLUMN role.name IS '角色名称';
-COMMENT ON COLUMN role.code IS '角色编码';
-COMMENT ON COLUMN role.description IS '描述';
-COMMENT ON COLUMN role.order_num IS '显示顺序';
-COMMENT ON COLUMN role.status IS '状态(0停用 1正常)';
-COMMENT ON COLUMN role.create_time IS '创建时间';
-COMMENT ON COLUMN role.update_time IS '更新时间';
+COMMENT ON TABLE sys_role IS '角色表';
+COMMENT ON COLUMN sys_role.id IS '角色ID';
+COMMENT ON COLUMN sys_role.name IS '角色名称';
+COMMENT ON COLUMN sys_role.code IS '角色编码';
+COMMENT ON COLUMN sys_role.description IS '描述';
+COMMENT ON COLUMN sys_role.order_num IS '显示顺序';
+COMMENT ON COLUMN sys_role.status IS '状态(0停用 1正常)';
+COMMENT ON COLUMN sys_role.create_time IS '创建时间';
+COMMENT ON COLUMN sys_role.update_time IS '更新时间';
 
-CREATE UNIQUE INDEX idx_role_code ON role(code);
+CREATE UNIQUE INDEX idx_role_code ON sys_role(code);
 
 -- 资源表(菜单/按钮/API等)
 CREATE TABLE resource (

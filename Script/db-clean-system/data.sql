@@ -10,22 +10,22 @@ INSERT INTO department (id, name, parent_id, order_num, status) VALUES
 SELECT setval('department_id_seq', (SELECT MAX(id) FROM department));
 
 -- 初始化角色数据
-INSERT INTO role (id, name, code, description, order_num, status) VALUES
+INSERT INTO sys_role (id, name, code, description, order_num, status) VALUES
                                                                       (1, '超级管理员', 'SUPER_ADMIN', '拥有所有权限', 1, 1),
                                                                       (2, '部门管理员', 'DEPT_ADMIN', '管理部门内用户和权限', 2, 1),
                                                                       (3, '普通用户', 'USER', '普通用户权限', 3, 1),
                                                                       (4, '访客', 'GUEST', '只读权限', 4, 1);
 
-SELECT setval('role_id_seq', (SELECT MAX(id) FROM role));
+SELECT setval('role_id_seq', (SELECT MAX(id) FROM sys_role));
 
 -- 初始化用户数据(密码为123456的加密结果)
-INSERT INTO "user" (id, username, password, real_name, email, phone, department_id, status) VALUES
+INSERT INTO sys_user (id, name, password, real_name, email, phone, department_id, status)VALUES
                                                                                                 (1, 'admin', '$2a$10$Egp1/gvFlt7zhlXVfEFl4Ou3oZQ6/5R2T3YIVR3WYVvxkYb5GpF.y', '系统管理员', 'admin@example.com', '13800138000', 1, 1),
                                                                                                 (2, 'tech_leader', '$2a$10$Egp1/gvFlt7zhlXVfEFl4Ou3oZQ6/5R2T3YIVR3WYVvxkYb5GpF.y', '技术总监', 'tech@example.com', '13800138001', 2, 1),
                                                                                                 (3, 'dev1', '$2a$10$Egp1/gvFlt7zhlXVfEFl4Ou3oZQ6/5R2T3YIVR3WYVvxkYb5GpF.y', '开发人员1', 'dev1@example.com', '13800138002', 4, 1),
                                                                                                 (4, 'tester1', '$2a$10$Egp1/gvFlt7zhlXVfEFl4Ou3oZQ6/5R2T3YIVR3WYVvxkYb5GpF.y', '测试人员1', 'tester1@example.com', '13800138003', 5, 1);
 
-SELECT setval('user_id_seq', (SELECT MAX(id) FROM "user"));
+SELECT setval('user_id_seq', (SELECT MAX(id) FROM sys_user));
 
 -- 初始化用户角色关联
 INSERT INTO user_role (user_id, role_id) VALUES
@@ -107,3 +107,18 @@ CREATE TABLE products (
                           name TEXT NOT NULL,
                           details JSONB
 );
+
+
+
+-- 插入测试数据
+INSERT INTO sys_role (name, code, description, order_num, status) VALUES
+                                                                  ('管理员', 'admin', '系统管理员角色，拥有最高权限', 1, 1),
+                                                                  ('普通用户', 'user', '普通用户角色，拥有基本操作权限', 2, 1),
+                                                                  ('访客', 'guest', '访客角色，仅能查看公开内容', 3, 1),
+                                                                  ('审核员', 'auditor', '负责内容审核的角色', 4, 1),
+                                                                  ('停用角色', 'disabled_role', '用于测试停用状态的角色', 5, 0),
+                                                                  ('编辑', 'editor', '负责内容编辑的角色', 6, 1),
+                                                                  ('超级管理员', 'super_admin', '超级管理员角色，权限高于管理员', 7, 1);
+
+-- 验证插入的数据
+SELECT * FROM sys_role ORDER BY order_num;
