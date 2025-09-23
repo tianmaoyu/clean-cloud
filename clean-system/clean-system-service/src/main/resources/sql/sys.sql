@@ -102,3 +102,7 @@ DROP TABLE sys_user_temp_4;
 
 commit ;
 
+explain select tableoid::regclass,* from sys_user offset 100 limit 100;
+
+
+select tableoid::regclass,* from sys_user offset 100 limit 100
