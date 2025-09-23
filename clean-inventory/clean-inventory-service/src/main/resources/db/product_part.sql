@@ -1,5 +1,5 @@
 
-select * from product where id=5000000
+select * from product where id=5000000;
 delete  from product where id=5000000;
 
 with t as (
