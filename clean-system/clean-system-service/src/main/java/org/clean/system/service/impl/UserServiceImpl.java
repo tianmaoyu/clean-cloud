@@ -84,7 +84,10 @@ public class UserServiceImpl implements UserService {
         return sdf.parse(dateStr);
     }
 
-
+    @Override
+   public List<User> selectAll(){
+        return userMapper.selectAll();
+    }
 
 }
 

@@ -134,6 +134,7 @@ public class FullSqlInterceptor implements Interceptor {
         set.add(upperCaseSql.indexOf("UPDATE "));
         set.add(upperCaseSql.indexOf("INSERT "));
         set.add(upperCaseSql.indexOf("DELETE "));
+        set.add(upperCaseSql.indexOf("WITH "));
         set.remove(-1);
         if (CollectionUtils.isEmpty(set)) {
             return -1;

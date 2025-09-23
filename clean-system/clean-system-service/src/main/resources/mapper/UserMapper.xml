@@ -19,4 +19,12 @@
         id,name,age,email,create_id,create_time,
         update_id,update_time
     </sql>
+
+    <select id="selectAll" resultType="org.clean.system.entity.User">
+        with  ctc as (
+        select * from sys_user limit 100
+        )
+        select * from ctc
+    </select>
+
 </mapper>

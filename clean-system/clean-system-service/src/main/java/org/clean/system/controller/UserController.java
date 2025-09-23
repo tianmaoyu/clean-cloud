@@ -62,6 +62,9 @@ public class UserController {
         return userService.editLambda(userId,  name);
     }
 
-
+    @GetMapping("/selectAll")
+    public List<User> selectAll(){
+        return userService.selectAll();
+    }
 
 }

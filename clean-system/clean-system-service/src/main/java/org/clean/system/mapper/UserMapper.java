@@ -63,6 +63,8 @@ public interface UserMapper extends BaseMapper<User> {
                 .update(new User());
     }
 
+    List<User> selectAll();
+
 }
 
 
