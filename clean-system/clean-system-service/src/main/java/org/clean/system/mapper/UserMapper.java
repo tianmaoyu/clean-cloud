@@ -34,6 +34,7 @@ public interface UserMapper extends BaseMapper<User> {
     }
 
 
+
     default Boolean updateEmail(String email, Long id) {
         return lambdaUpdate()
                 .eq(User::getId, id)
