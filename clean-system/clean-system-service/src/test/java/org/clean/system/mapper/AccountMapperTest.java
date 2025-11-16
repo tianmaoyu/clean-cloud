@@ -1,5 +1,6 @@
 package org.clean.system.mapper;
 
+import org.clean.Author;
 import org.clean.system.entity.Account;
 import org.clean.system.enums.AccountStatus;
 import org.junit.jupiter.api.Test;
@@ -16,13 +17,14 @@ public class AccountMapperTest {
     @Autowired
     private AccountMapper accountMapper;
 
+    @Author("zhangsan")
     @Test
     void updateAge() {
         Account account = accountMapper.selectById(1);
         Boolean b = accountMapper.updateAge(9, account.getId());
         assertTrue(b);
     }
-
+    @Author("zhangsan")
     @Test
     void insert() {
         Account account = new Account();

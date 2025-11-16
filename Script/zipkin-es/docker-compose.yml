@@ -1,0 +1,47 @@
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.22
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - zipkin-network
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - ES_HOSTS=http://elasticsearch:9200
+    ports:
+      - "9411"
+    depends_on:
+      - elasticsearch
+    networks:
+      - zipkin-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: zipkin-nginx
+    ports:
+      - "9411:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/htpasswd:/etc/nginx/conf.d/htpasswd
+    depends_on:
+      - zipkin
+    networks:
+      - zipkin-network
+
+volumes:
+  es_data:
+
+networks:
+  zipkin-network:
+    driver: bridge

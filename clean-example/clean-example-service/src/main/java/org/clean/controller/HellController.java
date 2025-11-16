@@ -7,6 +7,7 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.clean.Author;
 import org.clean.system.entity.User;
 import org.clean.system.feign.RedisFeignClient;
 import org.clean.system.feign.UserFeignClient;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+@Author(value = "eric", date = "2022/12/27")
 @Slf4j
 @RestController
 @RequestMapping("/hello")
@@ -35,12 +37,15 @@ public class HellController {
     @Autowired
     private RedisFeignClient redisFeignClient;
 
+    @Author(value = "eric2",date = "2022/12/27")
     @GetMapping("/getUser")
      public User getUser(@RequestParam("id") Long id) {
 
         User user = userFeignClient.getById(id);
         return user;
     }
+
+    @Author("eric1")
     @GetMapping("/getUser_Redis")
     public User getUser_Redis(@RequestParam("id") Long id) {
         User user = redisFeignClient.getById(id);

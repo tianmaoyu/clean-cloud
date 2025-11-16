@@ -2,6 +2,7 @@ package org.clean.system.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.clean.Author;
 import org.clean.system.entity.User;
 import org.clean.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class RedisController {
     @Autowired
     private UserService userService ;
 
+    @Author("admin")
      @GetMapping("/getUser")
      public User getUser(@RequestParam("id") Long id){
          String key = KEY_PREFIX + id;

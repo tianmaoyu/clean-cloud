@@ -3,6 +3,13 @@ server:
 spring:
   application:
     name: clean-example-service
+  zipkin:
+    base-url: http://localhost:55548/  # Zipkin服务器地址
+    sender:
+      type: web  # 发送方式：web或rabbit、kafka等
+  sleuth:
+    sampler:
+      probability: 1.0  # 采样率，1.0表示100%采样
   redis:
     host: localhost
     port: 6379

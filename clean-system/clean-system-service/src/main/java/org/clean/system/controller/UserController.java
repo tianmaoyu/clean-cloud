@@ -3,6 +3,7 @@ package org.clean.system.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.clean.Author;
 import org.clean.system.entity.User;
 import org.clean.system.enums.UserStatus;
 import org.clean.system.param.UserAddParam;
@@ -15,7 +16,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Author("admin")
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -26,6 +27,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+//    @Author("admin")
     @GetMapping("/getById")
     public User getById(@RequestParam("id") Long id){
         User user = userService.getById(id);
