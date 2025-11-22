@@ -3,6 +3,7 @@ package org.clean.system.service.impl;
 import com.alibaba.excel.EasyExcel;
 import org.clean.system.dto.UserDto;
 import org.clean.system.service.DemoService;
+import org.springframework.cloud.sleuth.SpanName;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -22,6 +23,7 @@ public class DemoServiceImpl implements DemoService {
         System.out.println("Executing doSomethingElse...");
     }
 
+    @SpanName("excel-report")
     public byte[] excelReport(Integer id) throws IOException {
 
        List<UserDto> userDataList = null;

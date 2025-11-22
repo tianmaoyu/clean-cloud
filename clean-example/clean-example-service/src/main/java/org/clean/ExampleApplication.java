@@ -10,6 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.InetAddress;
 
@@ -17,6 +18,7 @@ import java.net.InetAddress;
 @EnableAspectJAutoProxy
 @SpringBootApplication
 @EnableFeignClients
+@EnableScheduling
 @ComponentScan("org.clean.*")
 //@MapperScan( "org.clearexample.mapper")
 public class ExampleApplication {
