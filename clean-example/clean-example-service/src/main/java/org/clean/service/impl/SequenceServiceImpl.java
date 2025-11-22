@@ -60,7 +60,7 @@ public class SequenceServiceImpl implements SequenceService {
     /**
      * 批量获取编号
      */
-    public List<String> getNextSequences(String bizType, int count) {
+    public List<String> getNextSequence(String bizType, int count) {
 
         Assert.isTrue(count > 0, "count must be greater than 0");
         Assert.isTrue(count <= 1000, "count must be less than or equal to 1000");
