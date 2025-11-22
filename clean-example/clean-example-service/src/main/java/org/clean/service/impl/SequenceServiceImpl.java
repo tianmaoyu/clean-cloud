@@ -1,7 +1,6 @@
 package org.clean.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.clean.example.entity.SequenceGenerator;
 import org.clean.service.SequenceService;
 import org.redisson.api.RLock;
@@ -9,11 +8,11 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +26,11 @@ public class SequenceServiceImpl implements SequenceService {
     private RedissonClient redissonClient;
     private static final String SEQUENCE_CACHE_KEY_PREFIX = "sequence:cache:";
     private static final String SEQUENCE_LOCK_KEY_PREFIX = "sequence:lock:";
+    private static final String sequence_clean_key_prefix = "sequence:clean:";
+    //预生成数量
+    private static final int MAX_SEQUENCE_VALUE = 5000;
+    //单次最大取数
+    private static final int MIN_SEQUENCE_VALUE = 1000;
 
     /**
      * 获取一个编号
@@ -87,7 +91,7 @@ public class SequenceServiceImpl implements SequenceService {
 
 
     /**
-     * 补充缓存编号
+     * 补充缓存编号- 并发安全
      */
     public Boolean refillCache(String bizType) {
 
@@ -104,8 +108,8 @@ public class SequenceServiceImpl implements SequenceService {
                 Long cacheSize = redisTemplate.opsForList().size(cacheKey);
                 cacheSize=cacheSize==null?0:cacheSize;
                 int fillCount = 2000- cacheSize.intValue();
-                //可能上一个获取锁的已经进行填充,并且少量消费,避免重复填充
-                if(fillCount<200) return true;
+                //的已经进行填充,并且少量消费,避免重复填充
+                if(fillCount<1000) return true;
 
                 List<String> noList = this.generateSequences(bizType, fillCount);
                 redisTemplate.opsForList().leftPushAll(cacheKey, noList);
@@ -124,13 +128,75 @@ public class SequenceServiceImpl implements SequenceService {
     }
 
 
-    public Boolean clearCache(String bizType){
+    /**
+     * 每日重置 - 并发安全
+     * @param bizType
+     * @return
+     */
+    public Boolean  dailyReset (String bizType) {
+        this.dailyClearCache(bizType);
+        this.refillCache(bizType);
+        return true;
+    }
+
+    /**
+     * 每日凌晨清理重新设置 - 并发安全
+     * @param bizType
+     * @return
+     */
+    private Boolean dailyClearCache(String bizType){
+
+        // 使用日期作为标记，确保每天只清理一次
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String markerKey = sequence_clean_key_prefix + today+ ":" +bizType ;
+        Boolean alreadyCleaned = redisTemplate.hasKey(markerKey);
+        if (Boolean.TRUE.equals(alreadyCleaned)) return true;
+
 
         String cacheKey = SEQUENCE_CACHE_KEY_PREFIX + bizType;
+        String lockkey = SEQUENCE_LOCK_KEY_PREFIX + bizType;
+        //那些是否要清除 todo
 
-        //那些是否要清除
-        Boolean delete = redisTemplate.delete(cacheKey);
+        RLock lock = redissonClient.getLock(lockkey);
+        try {
+            boolean isLocked = lock.tryLock(0, 10, TimeUnit.SECONDS);
+            if (isLocked) {
 
+                // 再次检查标记（双重检查）
+                alreadyCleaned = redisTemplate.hasKey(markerKey);
+                if (Boolean.TRUE.equals(alreadyCleaned)) return true;
+
+                redisTemplate.delete(cacheKey);
+
+                redisTemplate.opsForValue().set(markerKey, "1", 25, TimeUnit.HOURS);
+
+                log.info("成功清理缓存，bizType: {}", bizType);
+
+                return true;
+            }
+        }  catch (Exception e) {
+            log.error("清除缓存失败:{}",cacheKey, e);
+            throw new RuntimeException(e);
+        }finally {
+            lock.unlock();
+        }
+        return false;
+    }
+
+
+    /**
+     * 配置规则变更,清理缓存,填充缓存
+     * @param bizType
+     * @return
+     */
+    public Boolean configChangeReset(String bizType){
+
+        //清理
+        String cacheKey = SEQUENCE_CACHE_KEY_PREFIX + bizType;
+        redisTemplate.delete(cacheKey);
+
+        //填充
+        this.refillCache(bizType);
         return true;
     }
 
@@ -145,7 +211,7 @@ public class SequenceServiceImpl implements SequenceService {
         long startValue = generator.getCurrentValue();
         int stepSize = Math.max(generateCount, generator.getStepSize());
 
-        // 生成编号
+        // 生成编号,各种规则
         List<String> sequences = new ArrayList<>();
         for (int i = 1; i <= stepSize; i++) {
             long sequenceValue = startValue + i;
