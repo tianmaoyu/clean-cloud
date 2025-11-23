@@ -48,7 +48,7 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
     /**
      * 获取一个编号
      */
-    public String getNextSequence(String bizType) {
+    public String getCode(String bizType) {
 
         Assert.hasText(bizType, "bizType can not be empty");
 
@@ -70,14 +70,18 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
         //三次数据库保底
         sequence = this.buildNo(bizType);
         if(sequence != null) return sequence;
+
         log.error("[单次]生产编号失败. bizType: {}", bizType);
         throw new RuntimeException("[单次]生产编号失败. bizType: " + bizType);
     }
 
     /**
-     * 批量获取编号
+     * 批量获取
+     * @param bizType
+     * @param count 最多1000
+     * @return
      */
-    public List<String> getNextSequence(String bizType, int count) {
+    public List<String> getCode(String bizType, int count) {
 
         Assert.isTrue(count > 0, "count must be greater than 0");
         Assert.isTrue(count <= MAX_BATCH_COUNT, "count must be less than or equal to 1000");
@@ -107,6 +111,7 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
         List<String> _list3 = this.buildNo(bizType, needCount);
         if(CollectionUtils.isNotEmpty(_list3) ) result.addAll(_list3);
         if(result.size() == count)  return result;
+
         log.error("[批量]生产编号失败. bizType: {} 获得count:{}", bizType,result.size());
         throw new RuntimeException("[批量]生产编号失败. bizType: " + bizType);
     }
@@ -157,13 +162,18 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
 
                 return true;
             }
-        }  catch (Exception e) {
-            log.error("补充缓存编号bizType错误:{}",cacheKey, e);
-            throw new RuntimeException(e);
+        }
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            log.error("获取锁被中断 cacheKey:{}",cacheKey, ex);
+            throw new RuntimeException(ex);
+        }
+        catch (Exception ex) {
+            log.error("补充缓存编号bizType错误:{}",cacheKey, ex);
+            throw ex;
         }finally {
             // 当前线程获得锁,则释放锁
             if (lock.isHeldByCurrentThread()) lock.unlock();
-
         }
         return false;
     }
@@ -241,7 +251,7 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
     }
 
     /**
-     * 生成编号
+     * 查询 数据库生成 code
      * @param bizType
      * @param count 获取个数
      * @return
