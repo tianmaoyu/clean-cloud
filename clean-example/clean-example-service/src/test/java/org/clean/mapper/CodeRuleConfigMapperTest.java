@@ -12,7 +12,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import javax.print.attribute.standard.PrinterURI;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,7 +53,7 @@ class CodeRuleConfigMapperTest {
         TransactionStatus status = transactionManager.getTransaction(def);
 
         try{
-            CodeRuleConfig codeRuleConfig = codeRuleConfigMapper.selectByBizTypeForUpdate(CodeRuleType.ORDER);
+            CodeRuleConfig codeRuleConfig = codeRuleConfigMapper.selectByBizTypeForLock(CodeRuleType.ORDER);
             log.info("查询结果: {}", codeRuleConfig.getVersion());
 
             Long newVersion = codeRuleConfig.getVersion() + 1;

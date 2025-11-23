@@ -2,12 +2,18 @@ package org.clean.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.clean.example.entity.CodeRuleConfig;
+import org.clean.example.enums.CodeRuleType;
+import org.clean.mapper.CodeRuleConfigMapper;
 import org.clean.service.CodeRuleConfigService;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.Assert;
 //import org.springframework.util.CollectionUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,6 +30,11 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private RedissonClient redissonClient;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+    @Autowired
+    private CodeRuleConfigMapper codeRuleConfigMapper;
+
     private static final String SEQUENCE_CACHE_KEY_PREFIX = "sequence:cache:";
     private static final String SEQUENCE_LOCK_KEY_PREFIX = "sequence:lock:";
     private static final String sequence_clean_key_prefix = "sequence:clean:";
@@ -228,66 +239,60 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
         List<String> strings = buildNo(bizType, 1);
         return strings.get(0);
     }
-//    更新并返回旧值 - 使用 RETURNING 子句
-//    @Select("UPDATE sequence_generator SET " +
-//            "current_value = current_value + #{step}, " +
-//            "version = version + 1, " +
-//            "updated_time = NOW() " +
-//            "WHERE biz_type = #{bizType} " +
-//            "RETURNING id, biz_type, current_value - #{step} as old_current_value, " +
-//            "current_value as new_current_value, step_size, min_cache_size, " +
-//            "description, version - 1 as old_version, version as new_version, " +
-//            "created_time, updated_time")
-    private List<String> buildNo(String bizType, int generateCount) {
 
-        //独立的事务
-        //直接更新数据库 并且 returning *;
+    /**
+     * 生成编号
+     * @param bizType
+     * @param count 获取个数
+     * @return
+     */
+    private List<String> buildNo(String bizType, int count) {
 
-//        SequenceGenerator generator = sequenceGeneratorMapper.findByBizType(bizType);
-        CodeRuleConfig generator = new CodeRuleConfig();
-        if (generator == null) {
-            throw new RuntimeException("未找到对应的编号生成器: " + bizType);
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        def.setTimeout(5);
+        TransactionStatus status = transactionManager.getTransaction(def);
+
+        try{
+
+            CodeRuleConfig ruleConfig = codeRuleConfigMapper.selectByBizTypeForLock(CodeRuleType.ORDER);
+            log.info("查询结果: {}", ruleConfig.getVersion());
+            Assert.notNull(ruleConfig, "规则不存在");
+
+            Long  curentValue = ruleConfig.getCurrentValue();
+            Integer step = ruleConfig.getStepSize();
+
+            List<String> codeList = new ArrayList<>();
+
+            for (int i = 1; i <= count; i++) {
+                curentValue = curentValue + step;
+                String code= bulidCode(bizType, curentValue);
+                codeList.add(code);
+            }
+
+            //更新记录
+            ruleConfig.setVersion(ruleConfig.getVersion() + 1);
+            ruleConfig.setCurrentValue(curentValue);
+            codeRuleConfigMapper.updateById(ruleConfig);
+
+            log.info("更新: {}", ruleConfig);
+
+            transactionManager.commit(status);
+
+            return codeList;
+
+        } catch (Exception ex) {
+            transactionManager.rollback(status);
+            log.error("生成编号异常 bizType: {} ",bizType, ex);
+            throw ex;
         }
 
-        // 获取数据库中的当前值
-        long startValue = generator.getCurrentValue();
-        int stepSize = Math.max(generateCount, generator.getStepSize());
-
-        // 生成编号,各种规则
-        List<String> sequences = new ArrayList<>();
-        for (int i = 1; i <= stepSize; i++) {
-            long sequenceValue = startValue + i;
-            sequences.add(formatSequence(bizType, sequenceValue));
-        }
-        // 乐观锁-更新数据库 CurrentValue 类似于 version 的版版本号来使用
-        generator.setCurrentValue(startValue + stepSize);
-        // 更新的使用 使用 乐观锁把
-//        int updatedRows = sequenceGeneratorMapper.updateWithOptimisticLock(generator);
-//
-//        if (updatedRows == 0) {
-//            // 乐观锁冲突，抛出异常触发重试
-//            throw new OptimisticLockException("序列号生成乐观锁冲突");
-//        }
-
-        log.info("成功生成一批编号. bizType: {}, 数量: {}, 起始值: {}, 结束值: {}",
-                bizType, stepSize, startValue + 1, startValue + stepSize);
-
-        return sequences;
     }
 
     /**
-     * 格式化编号
+     * 各种规则
      */
-    private String formatSequence(String bizType, long value) {
-        switch (bizType) {
-            case "ORDER_NO":
-                return "ORD" + String.format("%010d", value);
-            case "REFUND_NO":
-                return "REF" + String.format("%08d", value);
-            case "BATCH_NO":
-                return "BAT" + String.format("%06d", value);
-            default:
-                return String.valueOf(value);
-        }
+    private String bulidCode(String bizType, long value) {
+        return bizType+value;
     }
 }

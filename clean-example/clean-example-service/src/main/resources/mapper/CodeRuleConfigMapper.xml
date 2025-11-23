@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.clean.mapper.CodeRuleConfigMapper">
 
-    <select id="selectByBizTypeForUpdate" resultType="org.clean.example.entity.CodeRuleConfig">
+    <select id="selectByBizTypeForLock" resultType="org.clean.example.entity.CodeRuleConfig">
         SELECT *
         FROM code_rule_config
         where biz_type = #{bizType} for update

@@ -27,11 +27,11 @@ public interface CodeRuleConfigMapper extends BaseMapper<CodeRuleConfig> {
     }
 
     /**
-     * 加锁 - 查询
+     * 注意：该方法需要加锁
      * @param bizType 业务类型
      * @return
      */
-    CodeRuleConfig selectByBizTypeForUpdate(CodeRuleType bizType);
+    CodeRuleConfig selectByBizTypeForLock(CodeRuleType bizType);
 
     CodeRuleConfig updateByBizTypeReturn(@Param("bizType") CodeRuleType bizType, @Param("count") int count);
 
