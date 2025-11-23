@@ -9,6 +9,8 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -20,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -118,12 +121,29 @@ public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
 
     private List<String> cacheRightPop(String cacheKey, int count) {
         try {
-            return redisTemplate.opsForList().rightPop(cacheKey, count);
+            // List<String> result = redisTemplate.opsForList().rightPop(cacheKey, count); 低版本不支持
+            String luaScript =
+                    "local result = {} " +
+                     "for i = 1, tonumber(ARGV[1]) do " +
+                     "    local value = redis.call('rpop', KEYS[1]) " +
+                     "    if value then " +
+                     "        table.insert(result, value) " +
+                     "    else " +
+                     "        break " +
+                     "    end " +
+                     "end " +
+                     "return result";
+
+            RedisScript<List> script = new DefaultRedisScript<>(luaScript, List.class);
+            List<String> result = redisTemplate.execute(script, Collections.singletonList(cacheKey), String.valueOf(count));
+            return result != null ? result : Collections.emptyList();
+
         } catch (Exception e) {
             log.error("缓存获取异常. cacheKey: {}", cacheKey, e);
         }
         return new ArrayList<>();
     }
+    
     private String cacheRightPop(String cacheKey) {
         try {
             return redisTemplate.opsForList().rightPop(cacheKey);
