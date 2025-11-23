@@ -1,9 +1,8 @@
 package org.clean.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.clean.example.entity.SequenceGenerator;
-import org.clean.service.SequenceService;
-import org.ehcache.core.util.CollectionUtil;
+import org.clean.example.entity.CodeRuleConfig;
+import org.clean.service.CodeRuleConfigService;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +10,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 //import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-public class SequenceServiceImpl implements SequenceService {
+public class CodeRuleConfigServiceImpl implements CodeRuleConfigService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
@@ -247,7 +244,7 @@ public class SequenceServiceImpl implements SequenceService {
         //直接更新数据库 并且 returning *;
 
 //        SequenceGenerator generator = sequenceGeneratorMapper.findByBizType(bizType);
-        SequenceGenerator generator = new SequenceGenerator();
+        CodeRuleConfig generator = new CodeRuleConfig();
         if (generator == null) {
             throw new RuntimeException("未找到对应的编号生成器: " + bizType);
         }

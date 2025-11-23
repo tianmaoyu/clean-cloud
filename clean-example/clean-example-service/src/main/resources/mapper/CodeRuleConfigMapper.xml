@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.clean.mapper.CodeRuleConfigMapper">
+
+    <select id="selectByBizTypeForUpdate" resultType="org.clean.example.entity.CodeRuleConfig">
+        SELECT *
+        FROM code_rule_config
+        where biz_type = #{bizType} for update
+        limit 1
+    </select>
+
+   <!--    这是一个update 为了返回旧值-->
+    <select id="updateByBizTypeReturn" resultType="org.clean.example.entity.CodeRuleConfig">
+        UPDATE code_rule_config
+        SET version = version + 1,
+            current_value = current_value + #{count} * step_size,
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = (
+            SELECT id FROM code_rule_config
+            WHERE biz_type = #{bizType}
+            ORDER BY id
+            LIMIT 1
+            )
+        returning *
+    </select>
+
+</mapper>
