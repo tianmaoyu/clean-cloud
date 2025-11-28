@@ -34,7 +34,6 @@ public class HighPerformanceV1 {
         // 加载原始文档
         long start = System.currentTimeMillis();
 
-
         //数据
         List<Map<String, TemplateValue>> dataList = new ArrayList<>();
         for (Integer i = 0; i < count; i++) {
@@ -43,14 +42,10 @@ public class HighPerformanceV1 {
             dataList.add(keyValueMap);
         }
 
-        long start2 = System.currentTimeMillis();
         byte[] templateBytes = loadFileToMemory(templatePath);
         XWPFDocument document = new XWPFDocument(new ByteArrayInputStream(templateBytes));
-
         //扩展文档数量
         XWPFDocument expandfDocument = duplicateDocumentTables(document, count);
-        long end2 = System.currentTimeMillis();
-        log.info("填充:{} 耗时: {}", count, end2 - start2);
 
         //填充模版替换占位符
         populateDocument(expandfDocument, dataList);
@@ -119,7 +114,7 @@ public class HighPerformanceV1 {
                         //&& text.contains("}")
                         if (StringUtils.isNotBlank(text) && text.contains("{") ) {
                             for (XWPFRun run : paragraph.getRuns()) {
-                                Boolean replaced = replaceRunPlaceholder(run, keyValue);
+                                boolean replaced = replaceRunPlaceholder(run, keyValue);
                                 //只处理第一个
                                 if(replaced) break;
                             }
@@ -134,7 +129,7 @@ public class HighPerformanceV1 {
      * 替换运行中的占位符
      */
     @SneakyThrows
-    public  static   Boolean replaceRunPlaceholder(XWPFRun run, Map<String, TemplateValue> keyValues) {
+    public  static   boolean replaceRunPlaceholder(XWPFRun run, Map<String, TemplateValue> keyValues) {
 
         String text = run.getText(0);
         String placeholder = extractPlaceholder(text);
