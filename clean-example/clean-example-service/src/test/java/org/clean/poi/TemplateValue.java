@@ -1,6 +1,10 @@
 package org.clean.poi;
 
 import lombok.Data;
+//       // 保存最终文档
+//       try (FileOutputStream fileOutputStream = new FileOutputStream(outPath)) {
+//           outDoc.write(fileOutputStream);
+//       }
 
 @Data
 public class TemplateValue {
@@ -8,7 +12,9 @@ public class TemplateValue {
     private ValueType type;
     
     public enum ValueType {
-        STRING, IMAGE
+        STRING,
+        BARCODE,
+        QRCODE
     }
     
     public static TemplateValue ofString(String value) {
@@ -18,10 +24,10 @@ public class TemplateValue {
         return tv;
     }
     
-    public static TemplateValue ofImage(byte[] value) {
+    public static TemplateValue ofImage(byte[] value, ValueType type) {
         TemplateValue tv = new TemplateValue();
         tv.value = value;
-        tv.type = ValueType.IMAGE;
+        tv.type = type;
         return tv;
     }
 
