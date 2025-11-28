@@ -3,6 +3,7 @@ package org.clean.poi;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlObject;
@@ -15,11 +16,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class HighPerformanceV1 {
+    private static final int BUFFER_SIZE = 8192;
     private static final String TEMPLATE_FILE_PATH = "./data/template.docx";
     private static final String OUTPUT_FILE_PATH = "./data/final_output.docx";
 
     // 必须严谨:一个 table 一个条数据:这里有个问题未解决, 从第二个table 开始 row的行数就是1 ,已经跟模版中的不一样了
     public static void main(String[] args) {
+        ZipSecureFile.setMinInflateRatio(0.001);
         fillDocumentSingleDoc(1000);
     }
 
@@ -28,7 +31,7 @@ public class HighPerformanceV1 {
     private static void fillDocumentSingleDoc(int count) {
         String templatePath = "./data/templete.docx";
         String outPath = "./data/final_out.docx";
-
+        // 加载原始文档
         long start = System.currentTimeMillis();
 
 
@@ -41,9 +44,9 @@ public class HighPerformanceV1 {
         }
 
         long start2 = System.currentTimeMillis();
-        // 加载原始文档
         byte[] templateBytes = loadFileToMemory(templatePath);
         XWPFDocument document = new XWPFDocument(new ByteArrayInputStream(templateBytes));
+
         //扩展文档数量
         XWPFDocument expandfDocument = duplicateDocumentTables(document, count);
         long end2 = System.currentTimeMillis();
@@ -56,6 +59,7 @@ public class HighPerformanceV1 {
         try (FileOutputStream fileOutputStream = new FileOutputStream(outPath)) {
             expandfDocument.write(fileOutputStream);
         }
+        document.close();
         expandfDocument.close();
 
         long end = System.currentTimeMillis();
@@ -89,7 +93,7 @@ public class HighPerformanceV1 {
         }
 
         // 从字节数组重新加载文档-解决内部缓存
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(BUFFER_SIZE * 4);
         document.write(outputStream);
         XWPFDocument freshDocument = new XWPFDocument(new ByteArrayInputStream(outputStream.toByteArray()));
 
@@ -112,9 +116,12 @@ public class HighPerformanceV1 {
                     for (XWPFParagraph paragraph : cell.getParagraphs()) {
                         // 跳过部份
                         String text = paragraph.getText();
-                        if (StringUtils.isNotBlank(text) && text.contains("{") && text.contains("}")) {
+                        //&& text.contains("}")
+                        if (StringUtils.isNotBlank(text) && text.contains("{") ) {
                             for (XWPFRun run : paragraph.getRuns()) {
-                                replaceRunPlaceholder(run, keyValue);
+                                Boolean replaced = replaceRunPlaceholder(run, keyValue);
+                                //只处理第一个
+                                if(replaced) break;
                             }
                         }
                     }
@@ -131,7 +138,7 @@ public class HighPerformanceV1 {
 
         String text = run.getText(0);
         String placeholder = extractPlaceholder(text);
-        log.debug("text: {},placeholder:{}", text, placeholder);
+//        log.debug("text: {},placeholder:{}", text, placeholder);
         if (placeholder == null) return false;
 
         TemplateValue templateValue = keyValues.get(placeholder);
@@ -151,14 +158,14 @@ public class HighPerformanceV1 {
         // 处理条形码
         if (templateValue.getType() == TemplateValue.ValueType.BARCODE) {
             ByteArrayInputStream inputStream = new ByteArrayInputStream((byte[]) templateValue.getValue());
-            String imageName = UUID.randomUUID().toString()+Thread.currentThread().getId();
+            String imageName = UUID.randomUUID().toString();
             run.addPicture(inputStream, XWPFDocument.PICTURE_TYPE_PNG, imageName, Units.toEMU(150), Units.toEMU(20));
             return true;
         }
         // 处理二维码
         if (templateValue.getType() == TemplateValue.ValueType.QRCODE) {
             ByteArrayInputStream inputStream = new ByteArrayInputStream((byte[]) templateValue.getValue());
-            String imageName = UUID.randomUUID().toString()+Thread.currentThread().getId();
+            String imageName = UUID.randomUUID().toString();
             run.addPicture(inputStream, XWPFDocument.PICTURE_TYPE_PNG, imageName, Units.toEMU(75), Units.toEMU(75));
             return true;
         }
@@ -218,7 +225,7 @@ public class HighPerformanceV1 {
     public static byte[] loadFileToMemory(String filePath) throws IOException {
         try (FileInputStream fis = new FileInputStream(filePath);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[BUFFER_SIZE];
             int length;
             while ((length = fis.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, length);
