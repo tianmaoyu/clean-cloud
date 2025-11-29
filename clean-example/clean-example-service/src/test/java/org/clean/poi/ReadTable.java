@@ -388,11 +388,11 @@ public class ReadTable {
             appendXml = appendXml.replace(entry.getKey(), entry.getValue());
         }
 
-        //3.获取真正部份
+
         int index1 = appendXml.indexOf(">")+1;
         int index2 = appendXml.lastIndexOf("<");
         log.info("index1:{} index2:{}",index1,index2);
-        String addPart = appendXml.substring(index1, index2);
+        String addPart = appendXml.substring(index2, index2);
 
         return addPart;
 
