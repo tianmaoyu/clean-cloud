@@ -6,8 +6,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.XmlToken;
 import org.clean.xing.QRCodeGenerator;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+
 import java.io.*;
 
 import java.util.*;
@@ -21,9 +27,9 @@ public class ReadTable {
 //        fillDocumentSingleDoc()
 //        fillDocument();
 //        copyDocument();
-//        fillDocument_firstFill(100);
+        fillDocument_firstFill(1000);
 //        fillDocument_firstAppend(10000);
-        fillDocumentSingleDoc(1000);
+//        fillDocumentSingleDoc(1000);
 //        copyDocumentAndSave();
     }
 
@@ -178,15 +184,21 @@ public class ReadTable {
             replaceTable(templateDocuments.get(i), datalist.get(i));
         }
         //合并
-        XWPFDocument xwpfDocument = templateDocuments.get(0);
-        for(int i=1;i<templateDocuments.size();i++){
-            appendDocument(xwpfDocument, templateDocuments.get(i));
-//            templateDocuments.get(i).close();
-        }
+        XWPFDocument baseDocument = templateDocuments.get(0);
+
+        //单个
+//        for(int i=1;i<templateDocuments.size();i++){
+//            appendDocumentXml2(baseDocument, templateDocuments.get(i));
+//        }
+
+        //批量合并
+        List<XWPFDocument> xwpfDocuments = templateDocuments.subList(1, templateDocuments.size());
+        appendDocumentXml1(baseDocument,xwpfDocuments);
+
 
         //保存
         try (FileOutputStream fileOutputStream = new FileOutputStream(outPath)) {
-            xwpfDocument.write(fileOutputStream);
+            baseDocument.write(fileOutputStream);
         }
         long end = System.currentTimeMillis();
 
@@ -226,7 +238,7 @@ public class ReadTable {
     }
 
     /**
-     * 追加文档
+     * 追加文档- 直接复制
      */
     @SneakyThrows
     private static void appendDocument(XWPFDocument toDocument, XWPFDocument fromDocument) {
@@ -327,6 +339,108 @@ public class ReadTable {
             }
             return;
         }
+    }
+
+    /**
+     * 追加文档- xml 方式
+     */
+    public static void appendDocumentXml1(XWPFDocument base, List<XWPFDocument> documentList) throws Exception {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (XWPFDocument document : documentList) {
+            //获取追加部分-处理过图片的部份
+            String appendPart = getAppendPart(base, document);
+            stringBuilder.append(appendPart);
+        }
+
+        CTBody baseBody = base.getDocument().getBody();
+        String bodyString = baseBody.xmlText();
+        String prefix = bodyString.substring(0,bodyString.indexOf(">")+1);
+        String mainPart = bodyString.substring(bodyString.indexOf(">")+1,bodyString.lastIndexOf("<"));
+        String sufix = bodyString.substring( bodyString.lastIndexOf("<") );
+
+        String partListStr = stringBuilder.toString();
+        //将两个文档的xml内容进行拼接
+        CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+partListStr+sufix);
+
+        baseBody.set(makeBody);
+    }
+
+    public  static String  getAppendPart(XWPFDocument base, XWPFDocument append) throws Exception {
+
+        List<XWPFPictureData> pictures = append.getAllPictures();
+        Map<String, String> rIdMap = new HashMap<>();
+
+        // 1. 把源文档的图片重新插入到目标文档，并记录 rId 映射
+        for (XWPFPictureData pic : pictures) {
+            String oldRid = append.getRelationId(pic);
+            String newRid = base.addPictureData(pic.getData(), pic.getPictureType());
+            rIdMap.put(oldRid, newRid);
+        }
+
+        CTBody appendBody = append.getDocument().getBody();
+
+        // 2. 把源文档 XML 里的旧 rId 替换成新 rId
+        XmlOptions opt = new XmlOptions();
+        opt.setSaveOuter();
+        String appendXml = appendBody.xmlText(opt);
+        for (Map.Entry<String, String> entry : rIdMap.entrySet()) {
+            appendXml = appendXml.replace(entry.getKey(), entry.getValue());
+        }
+
+        //3.获取真正部份
+        int index1 = appendXml.indexOf(">")+1;
+        int index2 = appendXml.lastIndexOf("<");
+        log.info("index1:{} index2:{}",index1,index2);
+        String addPart = appendXml.substring(index1, index2);
+
+        return addPart;
+
+    }
+
+
+    /**
+     * 追加文档- body 节点方式 -很慢-能用 替换到 图片
+     */
+    public static void appendDocumentXml2(XWPFDocument src, XWPFDocument append) throws Exception {
+        CTBody src1Body = src.getDocument().getBody();
+        CTBody src2Body = append.getDocument().getBody();
+
+        List<XWPFPictureData> allPictures = append.getAllPictures();
+        // 记录图片合并前及合并后的ID
+        Map<String,String> map = new HashMap();
+        for (XWPFPictureData picture : allPictures) {
+            String before = append.getRelationId(picture);
+            //将原文档中的图片加入到目标文档中
+            String after = src.addPictureData(picture.getData(), Document.PICTURE_TYPE_PNG);
+            map.put(before, after);
+        }
+
+        appendBody(src1Body, src2Body,map);
+
+    }
+    private static void appendBody(CTBody baseBody, CTBody append,Map<String,String> map) throws Exception {
+        XmlOptions optionsOuter = new XmlOptions();
+        optionsOuter.setSaveOuter();
+        String appendString = append.xmlText(optionsOuter);
+
+        String srcString = baseBody.xmlText();
+        String prefix = srcString.substring(0,srcString.indexOf(">")+1);
+        String mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
+        String sufix = srcString.substring( srcString.lastIndexOf("<") );
+        //添加部份
+        String addPart = appendString.substring(appendString.indexOf(">") + 1, appendString.lastIndexOf("<"));
+
+        if (map != null && !map.isEmpty()) {
+            //对xml字符串中图片ID进行替换
+            for (Map.Entry<String, String> set : map.entrySet()) {
+                addPart = addPart.replace(set.getKey(), set.getValue());
+            }
+        }
+        //将两个文档的xml内容进行拼接
+        CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+sufix);
+
+        baseBody.set(makeBody);
     }
 
     /**
