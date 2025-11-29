@@ -17,6 +17,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import java.io.*;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -25,6 +26,11 @@ public class ReadTable {
 
     @SneakyThrows
     public static void main(String[] args) {
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+        int parallelism = commonPool.getParallelism();
+        System.out.println("Common pool parallelism (via instance): " + parallelism);
+
+
         ZipSecureFile.setMinInflateRatio(0.001);
         // 在main方法或程序初始化时设置
 //        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "8");
@@ -35,6 +41,10 @@ public class ReadTable {
 //        fillDocument_firstAppend(10000);
 //        fillDocumentSingleDoc(1000);
 //        copyDocumentAndSave();
+
+
+        int currentPoolSize = commonPool.getPoolSize();
+        System.out.println("Current number of threads in common pool: " + currentPoolSize);
     }
 
 
