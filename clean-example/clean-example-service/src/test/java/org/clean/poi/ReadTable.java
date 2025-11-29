@@ -17,6 +17,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import java.io.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 public class ReadTable {
@@ -24,6 +26,8 @@ public class ReadTable {
     @SneakyThrows
     public static void main(String[] args) {
         ZipSecureFile.setMinInflateRatio(0.001);
+        // 在main方法或程序初始化时设置
+//        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "8");
 //        fillDocumentSingleDoc()
 //        fillDocument();
 //        copyDocument();
@@ -169,20 +173,30 @@ public class ReadTable {
         long start = System.currentTimeMillis();
 
         //复制
-        List<XWPFDocument> templateDocuments = copyDocument(templatePath, count);
-
+//        List<XWPFDocument> templateDocuments = copyDocument(templatePath, count);
+        List<XWPFDocument> templateDocuments =  copyDocumentParallel(templatePath, count);
+        log.info("复制doc: {}", System.currentTimeMillis() - start);
         //数据
-        List<Map<String, TemplateValue>> datalist = new ArrayList<>();
-        for (Integer i = 0; i < templateDocuments.size(); i++) {
-            TemplateData templateData = generateData(i.toString());
-            Map<String, TemplateValue> keyValueMap = convetToTypedMap(templateData);
-            datalist.add(keyValueMap);
-        }
+//        List<Map<String, TemplateValue>> datalist = new ArrayList<>();
+//        for (Integer i = 0; i < templateDocuments.size(); i++) {
+//            TemplateData templateData = generateData(i.toString());
+//            Map<String, TemplateValue> keyValueMap = convetToTypedMap(templateData);
+//            datalist.add(keyValueMap);
+//        }
 
+        List<Map<String, TemplateValue>> datalist = generateDataParallel(templateDocuments.size());
+
+        log.info("生成数据: {}", System.currentTimeMillis() - start);
         //填充
-        for(int i=0;i<templateDocuments.size();i++){
+//        for(int i=0;i<templateDocuments.size();i++){
+//            replaceTable(templateDocuments.get(i), datalist.get(i));
+//        }
+
+        IntStream.range(0, templateDocuments.size()).parallel().forEach(i -> {
             replaceTable(templateDocuments.get(i), datalist.get(i));
-        }
+        });
+
+        log.info("填充数据: {}", System.currentTimeMillis() - start);
         //合并
         XWPFDocument baseDocument = templateDocuments.get(0);
 
@@ -228,8 +242,9 @@ public class ReadTable {
         byte[] templateBytes = loadFileToMemory(templatePath);
 
         for (int i = 0; i < count; i++) {
-            byte[] copyBytes = Arrays.copyOf(templateBytes, templateBytes.length);
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(copyBytes);
+            //无需复制
+//            byte[] copyBytes = Arrays.copyOf(templateBytes, templateBytes.length);
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(templateBytes);
             XWPFDocument document = new XWPFDocument(inputStream);
             documentList.add(document);
         }
@@ -237,6 +252,30 @@ public class ReadTable {
         return documentList;
     }
 
+    private static List<XWPFDocument> copyDocumentParallel(String templatePath, int count) throws IOException {
+        // 只加载一次模板
+        byte[] templateBytes = loadFileToMemory(templatePath);
+
+        return IntStream.range(0, count)
+                .parallel() // 并行处理
+                .mapToObj(i -> {
+                    try {
+                        ByteArrayInputStream inputStream = new ByteArrayInputStream(templateBytes);
+                        return new XWPFDocument(inputStream);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    private static  List<Map<String, TemplateValue>> generateDataParallel(int count) throws IOException {
+        return IntStream.range(0, count).parallel().mapToObj(i -> {
+                    TemplateData templateData = generateData(Integer.toString( i));
+                    Map<String, TemplateValue> keyValueMap = convetToTypedMap(templateData);
+                    return keyValueMap;
+                }).collect(Collectors.toList());
+    }
     /**
      * 追加文档- 直接复制
      */
@@ -557,7 +596,7 @@ public class ReadTable {
     public static byte[] loadFileToMemory(String filePath) throws IOException {
         try (FileInputStream fis = new FileInputStream(filePath);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[8192];
             int length;
             while ((length = fis.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, length);
