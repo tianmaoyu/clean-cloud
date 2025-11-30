@@ -1,5 +1,4 @@
 package org.clean.system.mapper;
-import io.qameta.allure.Owner;
 import lombok.extern.slf4j.Slf4j;
 import org.clean.system.entity.User;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Owner("lisi")
 @Slf4j
 @SpringBootTest
 public class UserMapperTest {

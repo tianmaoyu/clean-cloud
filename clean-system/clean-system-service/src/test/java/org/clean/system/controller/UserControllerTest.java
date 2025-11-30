@@ -32,7 +32,7 @@ class UserControllerTest {
     @Autowired
     private UserController userController;
 
-    @MockBean
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -43,6 +43,11 @@ class UserControllerTest {
         this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
+    @Test
+    void testGetById1() throws Exception {
+        User byId = userController.getById(1L);
+        assertThat(byId).isNotNull();
+    }
     @Test
     void testGetById() throws Exception {
         User mockUser = new User();

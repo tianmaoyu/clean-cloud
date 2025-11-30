@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
     }
 
-    @Test
+//    @Test
     void generateTestData() {
         int total = 100000;
         int batchSize = 2000;
