@@ -102,6 +102,13 @@ public class DebeziumConfig {
         props.setProperty("slot.name", "mac_db_");
         props.setProperty("publication.name", "dbz_publication");
 
+//        //全局精简配置
+//        props.setProperty("transforms", "unwrap");
+//        props.setProperty("transforms.unwrap.type", "io.debezium.transforms.ExtractNewRecordState");
+//        props.setProperty("transforms.unwrap.drop.tombstones", "true");
+//        props.setProperty("transforms.unwrap.delete.handling.mode", "rewrite");
+//        props.setProperty("transforms.unwrap.add.fields", "table,lsn,op,txId");
+
         // 快照配置 initial, never, when_needed
         props.setProperty("snapshot.mode", "never");
 
