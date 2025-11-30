@@ -1,29 +1,27 @@
 package org.clean.system.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.clean.system.controller.UserController;
 import org.clean.system.entity.User;
 import org.clean.system.enums.SexEnum;
-import org.clean.system.enums.UserStatus;
 import org.clean.system.enums.UserType;
 import org.clean.system.param.UserAddParam;
+import org.clean.system.report.AuthorTestExtension;
 import org.clean.system.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@ExtendWith(AuthorTestExtension.class)
 @SpringBootTest
 class UserControllerTest {
 
@@ -72,6 +70,7 @@ class UserControllerTest {
         param.setUserType(UserType.USER);
         param.setSex(SexEnum.FEMALE);
 
+        userController.add(param);
 
         String jsonContent = objectMapper.writeValueAsString(param);
 

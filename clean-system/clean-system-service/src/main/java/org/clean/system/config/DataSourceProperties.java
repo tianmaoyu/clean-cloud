@@ -13,4 +13,12 @@ public class DataSourceProperties {
     private String password;
 
     // Getters and Setters
+
+    public String getUrlX() {
+        return url;
+    }
+
+    public String getFullName() {
+        return url;
+    }
 }

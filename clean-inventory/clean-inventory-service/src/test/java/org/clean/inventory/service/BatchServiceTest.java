@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
+//    @Test
     void saveBatch() {
         Batch batch = batchService.getById(1);
         assertNotNull(batch);

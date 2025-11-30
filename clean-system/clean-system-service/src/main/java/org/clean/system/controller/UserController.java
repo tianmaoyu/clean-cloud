@@ -27,7 +27,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @Author("admin")
+    @Author("admin-1")
     @GetMapping("/getById")
     public User getById(@RequestParam("id") Long id){
         User user = userService.getById(id);
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     //add
-
+    @Author("admin-1")
     @PostMapping("/add")
     public User add(@RequestBody @Valid UserAddParam param){
         User user = new User();

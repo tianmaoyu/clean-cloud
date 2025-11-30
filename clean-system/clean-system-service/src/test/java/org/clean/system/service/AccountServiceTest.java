@@ -2,6 +2,7 @@ package org.clean.system.service;
 
 import org.clean.system.entity.Account;
 import org.clean.system.enums.AccountStatus;
+import org.clean.system.report.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @Rollback
-public class AccountServiceTest {
+public class AccountServiceTest extends BaseTest {
 
     @Autowired
     private AccountService accountService;
