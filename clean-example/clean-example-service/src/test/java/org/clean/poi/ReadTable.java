@@ -424,7 +424,8 @@ public class ReadTable {
         for (XWPFPictureData pic : pictures) {
             String oldRid = append.getRelationId(pic);
             String newRid = base.addPictureData(pic.getData(), pic.getPictureType());
-            rIdMap.put(oldRid, newRid);
+            //这里 直接替换会有个bug todo  如 xx1,会把 xx10,xx12 都替换成 xx1;需要加个双引号
+            rIdMap.put("\""+oldRid+"\"", "\""+newRid+"\"");
         }
 
         CTBody appendBody = append.getDocument().getBody();
