@@ -18,6 +18,8 @@
         <module>clean-starter-mybatis</module>
         <module>clean-starter-redis</module>
         <module>clean-starter-swagger</module>
+        <module>clean-starter-test</module>
+        <module>test-save-plugin</module>
     </modules>
 
 </project>

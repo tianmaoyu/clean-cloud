@@ -227,6 +227,28 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.clean</groupId>
+                <artifactId>test-save-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>save-coverage</id>
+                        <!-- 绑定到集成测试后的阶段 mvn post-integration-test 使用命令行运行 -->
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>save-coverage</goal>
+                        </goals>
+                        <configuration>
+                            <projectName>${project.artifactId}</projectName>
+                            <dbUrl>jdbc:postgresql://localhost:5432/coverage_db</dbUrl>
+                            <dbUsername>postgres</dbUsername>
+                            <dbPassword>123456</dbPassword>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
