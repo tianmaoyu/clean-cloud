@@ -202,6 +202,11 @@
             <artifactId>org.jacoco.core</artifactId>
             <version>${org.jacoco-version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.report</artifactId>
+            <version>${org.jacoco-version}</version>
+        </dependency>
     </dependencies>
 
     <build>

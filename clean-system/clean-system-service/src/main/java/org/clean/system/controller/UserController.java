@@ -27,7 +27,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Author("admin-1")
+    @Author(value = "admin-1",date = "2020-09-01")
     @GetMapping("/getById")
     public User getById(@RequestParam("id") Long id){
         User user = userService.getById(id);
