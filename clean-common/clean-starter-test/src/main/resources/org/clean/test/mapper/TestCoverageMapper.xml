@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.clean.test.mapper.TestCoverageMapper">
+
+    <resultMap id="BaseResultMap" type="org.clean.test.entity.TestCoverage">
+            <id property="id" column="id" />
+            <result property="projectName" column="project_name" />
+            <result property="testClass" column="test_class" />
+            <result property="testMethod" column="test_method" />
+            <result property="lineCoverage" column="line_coverage" />
+            <result property="executionTime" column="execution_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_name,test_class,test_method,line_coverage,execution_time
+    </sql>
+</mapper>

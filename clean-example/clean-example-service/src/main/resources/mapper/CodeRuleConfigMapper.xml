@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.clean.mapper.CodeRuleConfigMapper">
+<mapper namespace="org.clean.example.mapper.CodeRuleConfigMapper">
 
     <select id="selectByBizTypeForLock" resultType="org.clean.example.entity.CodeRuleConfig">
         SELECT *

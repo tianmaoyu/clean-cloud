@@ -1,11 +1,12 @@
-package org.clean.system.service;
+package org.clean.example.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.clean.Author;
 import org.clean.test.BaseTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @Author(value = "李四", date = "2024-01-16")

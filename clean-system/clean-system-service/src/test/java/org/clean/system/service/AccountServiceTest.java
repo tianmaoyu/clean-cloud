@@ -2,7 +2,7 @@ package org.clean.system.service;
 
 import org.clean.system.entity.Account;
 import org.clean.system.enums.AccountStatus;
-import org.clean.system.report.BaseTest;
+import org.clean.test.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
