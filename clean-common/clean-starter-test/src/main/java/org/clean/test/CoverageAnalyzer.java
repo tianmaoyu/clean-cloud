@@ -68,8 +68,7 @@ public class CoverageAnalyzer {
             String packageName = getPackageName(className);
 
             // 获取类的字节码以计算圈复杂度
-            ClassNode classNode = parseClassFile(new File(path + "/target/classes",
-                    clazz.getName().replace('.', '/') + ".class"));
+            ClassNode classNode = parseClassFile(new File(path + "/target/classes",clazz.getName().replace('.', '/') + ".class"));
 //            AuthorInfo classAuthor = getClassAuthorInfo(classNode);
 
             // 初始化包统计信息
