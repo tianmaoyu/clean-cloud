@@ -90,7 +90,9 @@ public class CoverageAnalyzer {
                 }
 
                 // 获取方法作者信息（优先方法注解，其次类注解）
-                AuthorInfo methodAuthor = getMethodAuthorInfo(classNode, methodName, methodDesc);
+//                AuthorInfo methodAuthor = getMethodAuthorInfo(classNode, methodName, methodDesc);
+
+                AuthorInfo methodAuthor = getMethodAuthorInfo(classNode, methodName, methodDesc, path);
 
                 // 获取方法签名
                 String methodSignature = getMethodSignature(methodName, methodDesc);
@@ -139,6 +141,7 @@ public class CoverageAnalyzer {
                 System.out.printf("分支覆盖率: %f\n", branchCoveredRatio);
                 System.out.printf("指令覆盖率: %f\n",instructionCoverage);
                 System.out.printf("是否被覆盖: %s\n", lineCovered > 0 ? "是" : "否");
+                System.out.printf("作者: %s\n", methodAuthor.getValue());
 
                 // 输出未覆盖的行号
                 if (lineMissed > 0) {
@@ -311,19 +314,19 @@ public class CoverageAnalyzer {
             // 示例用法
             analyzer.analyzeCoverage(basePath);
 
-            // 生成 HTML 报告
-            analyzer.generateHtmlReport(
-                    basePath+"/src/main/java",
-                    basePath + "/target/classes",
-                    basePath + "/target/jacoco.exec",
-                    basePath + "/target/coverage-report"
-            );
+//            // 生成 HTML 报告
+//            analyzer.generateHtmlReport(
+//                    basePath+"/src/main/java",
+//                    basePath + "/target/classes",
+//                    basePath + "/target/jacoco.exec",
+//                    basePath + "/target/coverage-report"
+//            );
 
             // 生成 CSV 报告
             analyzer.generateCsvReport(
                     basePath + "/target/classes",
                     basePath + "/target/jacoco.exec",
-                    basePath + "/target/coverage-report/coverage.csv"
+                    basePath + "/target/coverage.csv"
             );
 
         } catch (IOException e) {
@@ -374,6 +377,140 @@ public class CoverageAnalyzer {
 
         return null; // 都没有找到
     }
+
+
+    /**
+     * 获取方法的作者信息（优先从方法注解，其次从类注解，最后从接口获取）
+     * 接口查找策略：只查第一个接口，优先查接口方法，其次查接口类
+     */
+    public static AuthorInfo getMethodAuthorInfo(ClassNode classNode, String methodName, String methodDesc, String basePath) {
+
+        // 1. 首先从方法注解中查找
+        for (MethodNode method : classNode.methods) {
+            if (method.name.equals(methodName) && (methodDesc == null || method.desc.equals(methodDesc))) {
+
+                // 检查方法上的可见注解
+                AuthorInfo methodAuthor = extractAuthorFromAnnotations(method.visibleAnnotations);
+                if (methodAuthor != null) {
+                    methodAuthor.setFromMethod(true);
+                    methodAuthor.setFromInterface(false);
+                    return methodAuthor;
+                }
+
+                // 检查方法上的不可见注解
+                methodAuthor = extractAuthorFromAnnotations(method.invisibleAnnotations);
+                if (methodAuthor != null) {
+                    methodAuthor.setFromMethod(true);
+                    methodAuthor.setFromInterface(false);
+                    return methodAuthor;
+                }
+
+                break; // 找到方法后就退出循环
+            }
+        }
+
+        // 2. 如果方法上没有找到，从类注解中查找
+        AuthorInfo classAuthor = extractAuthorFromAnnotations(classNode.visibleAnnotations);
+        if (classAuthor != null) {
+            classAuthor.setFromMethod(false);
+            classAuthor.setFromInterface(false);
+            return classAuthor;
+        }
+
+        classAuthor = extractAuthorFromAnnotations(classNode.invisibleAnnotations);
+        if (classAuthor != null) {
+            classAuthor.setFromMethod(false);
+            classAuthor.setFromInterface(false);
+            return classAuthor;
+        }
+
+        // 3. 如果类中也没有找到，从第一个接口中查找（只查第一个接口）
+        if (classNode.interfaces != null && !classNode.interfaces.isEmpty()) {
+            String firstInterface = classNode.interfaces.get(0);
+            try {
+                ClassNode interfaceNode = loadInterfaceClassNode(firstInterface, basePath);
+                if (interfaceNode != null) {
+                    // 3.1 优先从接口方法中查找
+                    for (MethodNode method : interfaceNode.methods) {
+                        // 注意：接口中的方法可能与实现类的方法有相同的签名
+                        if (method.name.equals(methodName) && (methodDesc == null || method.desc.equals(methodDesc))) {
+                            // 检查接口方法上的可见注解
+                            AuthorInfo methodAuthor = extractAuthorFromAnnotations(method.visibleAnnotations);
+                            if (methodAuthor != null) {
+                                methodAuthor.setFromMethod(true);
+                                methodAuthor.setFromInterface(true);
+                                return methodAuthor;
+                            }
+
+                            // 检查接口方法上的不可见注解
+                            methodAuthor = extractAuthorFromAnnotations(method.invisibleAnnotations);
+                            if (methodAuthor != null) {
+                                methodAuthor.setFromMethod(true);
+                                methodAuthor.setFromInterface(true);
+                                return methodAuthor;
+                            }
+
+                            break; // 找到方法后就退出循环
+                        }
+                    }
+
+                    // 3.2 如果接口方法上没找到，从接口类上查找
+                    AuthorInfo interfaceClassAuthor = extractAuthorFromAnnotations(interfaceNode.visibleAnnotations);
+                    if (interfaceClassAuthor != null) {
+                        interfaceClassAuthor.setFromMethod(false);
+                        interfaceClassAuthor.setFromInterface(true);
+                        return interfaceClassAuthor;
+                    }
+
+                    interfaceClassAuthor = extractAuthorFromAnnotations(interfaceNode.invisibleAnnotations);
+                    if (interfaceClassAuthor != null) {
+                        interfaceClassAuthor.setFromMethod(false);
+                        interfaceClassAuthor.setFromInterface(true);
+                        return interfaceClassAuthor;
+                    }
+                }
+            } catch (IOException e) {
+                log.warn("加载接口类文件失败: {}", firstInterface, e);
+            }
+        }
+
+        return new AuthorInfo(); // 都没有找到
+    }
+
+    /**
+     * 加载接口的ClassNode
+     */
+    private static ClassNode loadInterfaceClassNode(String interfaceName, String basePath) throws IOException {
+        // 将接口名转换为文件路径（例如：com/example/MyInterface）
+        String interfacePath = interfaceName + ".class";
+        File interfaceFile = new File(basePath + "/target/classes", interfacePath);
+
+        if (interfaceFile.exists()) {
+            return parseClassFile2(interfaceFile);
+        } else {
+            // 如果target/classes下没有，尝试从源码路径查找（主要用于开发环境）
+            interfaceFile = new File(basePath + "/src/main/java", interfacePath);
+            if (interfaceFile.exists()) {
+                return parseClassFile2(interfaceFile);
+            }
+        }
+
+        log.debug("接口文件未找到: {}", interfacePath);
+        return null;
+    }
+
+    /**
+     * 解析类文件（修改为static以便静态方法调用）
+     */
+    private static ClassNode parseClassFile2(File classFile) throws IOException {
+        ClassNode classNode = new ClassNode();
+        try (FileInputStream fis = new FileInputStream(classFile)) {
+            ClassReader classReader = new ClassReader(fis);
+            classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+        }
+        return classNode;
+    }
+
 
     /**
      * 获取类的作者信息

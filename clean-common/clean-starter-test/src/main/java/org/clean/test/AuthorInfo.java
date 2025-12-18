@@ -8,6 +8,7 @@ public  class AuthorInfo {
         private String date;
         private String version;
         private boolean fromMethod; // true:来自方法注解, false:来自类注解
+       private boolean fromInterface; // 是否来自接口
 
         @Override
         public String toString() {

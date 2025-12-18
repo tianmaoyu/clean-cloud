@@ -1,6 +1,7 @@
 package org.clean.system.converter;
 
 import lombok.SneakyThrows;
+import org.clean.Author;
 import org.clean.system.entity.User;
 import org.clean.system.param.UserParam;
 import org.mapstruct.AfterMapping;
@@ -15,11 +16,13 @@ import java.util.TimeZone;
 
 // todo 枚举 是显示的是 desc
 // todo 两个对象 合成一个对象
+@Author("eric")
 @Mapper(componentModel = "spring")
 public interface UserConverter {
     UserParam toParam(User entity);
     List<UserParam> toParam(List<User> entityList);
 
+    @Author("root")
     User toEntity(UserParam param);
     List<User> toEntity(List<UserParam> paramList);
 
@@ -33,7 +36,9 @@ public interface UserConverter {
 
         return sdf.format(date);
     }
+
     // 字段名称一样,类型不一样
+    @Author("admin")
     @SneakyThrows
     default Date toDate(String dateStr){
 
