@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.MybatisUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.ExecutorType;
@@ -69,6 +70,18 @@ public interface AccountMapper extends BaseMapper<Account> {
 
     default Boolean insertBatch(List<Account> accountList){
         Boolean success = BatchUtils.insertBatch(this, accountList);
+        return success;
+    }
+    default Boolean insertBatch2(List<Account> accountList){
+        Boolean success = BatchUtils.insertBatch(this, accountList);
+        return success;
+    }
+    default Boolean insertBatch3(List<Account> accountList){
+
+        boolean success = Db.saveBatch(accountList, 200);
+//        Boolean success = BatchUtils.insertBatch(this, accountList);
+
+
         return success;
     }
 
