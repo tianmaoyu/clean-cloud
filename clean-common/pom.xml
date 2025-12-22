@@ -20,6 +20,7 @@
         <module>clean-starter-swagger</module>
         <module>clean-starter-test</module>
         <module>test-save-plugin</module>
+        <module>clean-common-service</module>
     </modules>
 
 </project>
