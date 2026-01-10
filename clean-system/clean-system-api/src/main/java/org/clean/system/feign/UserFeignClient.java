@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
-@FeignClient(name = "clean-system-service", contextId =  "UserFeignClient")
+@FeignClient(name = "clean-system-service")
 public interface UserFeignClient {
     @GetMapping("/user/getById")
     User getById(@RequestParam("id") Long id);
