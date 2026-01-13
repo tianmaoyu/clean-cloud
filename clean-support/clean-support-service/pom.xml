@@ -7,19 +7,15 @@
         <groupId>org.clean</groupId>
         <artifactId>clean-cloud</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>clean-common</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>clean-starter-tenum</module>
-        <module>clean-starter-core</module>
-        <module>clean-starter-web</module>
-        <module>clean-starter-mybatis</module>
-        <module>clean-starter-redis</module>
-        <module>clean-starter-swagger</module>
-        <module>clean-starter-test</module>
-        <module>test-save-plugin</module>
-    </modules>
+    <artifactId>clean-support-service</artifactId>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 </project>

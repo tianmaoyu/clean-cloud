@@ -1,4 +1,4 @@
-package org.clean.payment;
+package org.clean.product;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +13,11 @@ import java.net.InetAddress;
 
 @Slf4j
 @EnableAspectJAutoProxy
-@ComponentScan ("org.clean.*")
 @SpringBootApplication
-public class PaymentServiceApplication {
+public class ProductApplication {
     @SneakyThrows
     public static void main(String[] args) {
-        ConfigurableApplicationContext application = SpringApplication.run(PaymentServiceApplication.class, args);
+        ConfigurableApplicationContext application = SpringApplication.run(ProductApplication.class, args);
         Environment env = application.getEnvironment();
         log.info("\n----------------------------------------------------------\n\t" +
                         "Application '{}' is running! Access URLs:\n\t" +

@@ -1,0 +1,33 @@
+package org.clean.payment;
+
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.core.env.Environment;
+
+import java.net.InetAddress;
+
+@Slf4j
+@EnableAspectJAutoProxy
+@ComponentScan ("org.clean.*")
+@SpringBootApplication
+public class PaymentApplication {
+    @SneakyThrows
+    public static void main(String[] args) {
+        ConfigurableApplicationContext application = SpringApplication.run(PaymentApplication.class, args);
+        Environment env = application.getEnvironment();
+        log.info("\n----------------------------------------------------------\n\t" +
+                        "Application '{}' is running! Access URLs:\n\t" +
+
+                        "Doc: \thttp://{}:{}/doc.html\n"+
+                        "----------------------------------------------------------",
+                env.getProperty("spring.application.name"),
+                InetAddress.getLocalHost().getHostAddress(),
+                env.getProperty("server.port"));
+    }
+
+}

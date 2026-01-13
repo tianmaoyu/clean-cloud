@@ -14,7 +14,7 @@
 
     <modules>
         <module>clean-product-api</module>
-        <module>clean-product-service</module>
+        <module>clean-product-app</module>
     </modules>
 
 </project>
