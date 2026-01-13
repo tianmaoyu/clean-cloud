@@ -9,12 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>clean-support</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
-    <modules>
-        <module>clean-support-api</module>
-        <module>clean-support-service</module>
-    </modules>
+    <artifactId>clean-websocket</artifactId>
+    <packaging>pom</packaging>
 
 </project>

@@ -27,8 +27,8 @@
         <module>clean-payment</module>
         <module>clean-common</module>
         <module>clean-support</module>
-        <module>clean-support/clean-support-api</module>
-        <module>clean-support/clean-support-service</module>
+        <module>clean-gateway</module>
+        <module>clean-websocket</module>
     </modules>
 
     <properties>

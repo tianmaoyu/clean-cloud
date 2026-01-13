@@ -5,16 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.clean</groupId>
-        <artifactId>clean-cloud</artifactId>
+        <artifactId>clean-websocket</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>clean-support</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>clean-websocket-app</artifactId>
+    <packaging>jar</packaging>
 
-    <modules>
-        <module>clean-support-api</module>
-        <module>clean-support-service</module>
-    </modules>
 
 </project>
