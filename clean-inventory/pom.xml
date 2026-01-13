@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>clean-inventory-api</module>
-        <module>clean-inventory-service</module>
+        <module>clean-inventory-app</module>
     </modules>
 
 

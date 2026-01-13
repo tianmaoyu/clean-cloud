@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>clean-order-api</module>
-        <module>clean-order-service</module>
+        <module>clean-order-app</module>
     </modules>
 
 

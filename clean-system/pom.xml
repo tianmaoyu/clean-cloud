@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
      <modules>
         <module>clean-system-api</module>
-        <module>clean-system-service</module>
+        <module>clean-system-app</module>
     </modules>
 
 </project>

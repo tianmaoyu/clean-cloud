@@ -8,7 +8,7 @@
         <artifactId>clean-gateway</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>clean-gateway-service</artifactId>
+    <artifactId>clean-gateway-app</artifactId>
     <packaging>jar</packaging>
 
 

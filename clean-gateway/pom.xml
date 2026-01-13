@@ -11,7 +11,7 @@
     <artifactId>clean-gateway</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>clean-gateway-service</module>
+        <module>clean-gateway-app</module>
     </modules>
 
 </project>

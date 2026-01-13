@@ -12,7 +12,7 @@
     <artifactId>clean-example</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>clean-example-service</module>
+        <module>clean-example-app</module>
         <module>clean-example-api</module>
     </modules>
 

@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>clean-search-api</module>
-        <module>clean-search-service</module>
+        <module>clean-search-app</module>
     </modules>
 
 
