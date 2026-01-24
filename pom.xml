@@ -18,7 +18,6 @@
     <modules>
         <module>clean-example</module>
 
-        <module>clean-gateway</module>
         <module>clean-system</module>
         <module>clean-product</module>
         <module>clean-order</module>

@@ -12,4 +12,7 @@
     <artifactId>clean-websocket</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>clean-websocket-app</module>
+    </modules>
 </project>
