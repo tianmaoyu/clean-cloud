@@ -9,11 +9,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>clean-payment</artifactId>
+    <artifactId>clean-third</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>clean-payment-api</module>
-        <module>clean-payment-app</module>
+        <module>clean-third-api</module>
+        <module>clean-third-service</module>
     </modules>
 
 

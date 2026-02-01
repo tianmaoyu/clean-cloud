@@ -17,17 +17,16 @@
     <packaging>pom</packaging>
     <modules>
         <module>clean-example</module>
-
         <module>clean-system</module>
         <module>clean-product</module>
-        <module>clean-order</module>
+        <module>clean-third</module>
         <module>clean-inventory</module>
         <module>clean-search</module>
-        <module>clean-payment</module>
         <module>clean-common</module>
         <module>clean-support</module>
-        <module>clean-gateway</module>
-        <module>clean-websocket</module>
+        <module>clean-open-app</module>
+        <module>clean-gateway-app</module>
+        <module>clean-websocket-app</module>
     </modules>
 
     <properties>

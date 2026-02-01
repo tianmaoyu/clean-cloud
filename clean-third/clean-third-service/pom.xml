@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.clean</groupId>
-        <artifactId>clean-order</artifactId>
+        <artifactId>clean-third</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>clean-order-app</artifactId>
+    <artifactId>clean-third-service</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
