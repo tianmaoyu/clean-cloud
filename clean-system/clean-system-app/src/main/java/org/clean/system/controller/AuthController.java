@@ -1,5 +1,6 @@
 package org.clean.system.controller;
 
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.clean.system.entity.User;
 import org.clean.system.service.JwtTokenService;
 import org.clean.system.service.UserService;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    
+
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+
     @Autowired
     private JwtTokenService jwtTokenService;
     
