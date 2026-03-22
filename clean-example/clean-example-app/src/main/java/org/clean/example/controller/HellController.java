@@ -8,6 +8,7 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.clean.Author;
+import org.clean.Result;
 import org.clean.system.entity.User;
 import org.clean.system.feign.RedisFeignClient;
 import org.clean.system.feign.UserFeignClient;
@@ -43,6 +44,12 @@ public class HellController {
 
         User user = userFeignClient.getById(id);
         return user;
+    }
+    @Author(value = "eric2",date = "2022/12/27")
+    @GetMapping("/getUser2")
+    public User getUser2(@RequestParam("id") Long id) {
+        Result<User> userResult = userFeignClient.getById2(id);
+        return userResult.getData();
     }
 
     @Author("eric1")

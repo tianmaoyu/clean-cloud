@@ -1,19 +1,17 @@
 package org.clean.system.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.clean.Author;
+import org.clean.Result;
 import org.clean.system.entity.User;
-import org.clean.system.enums.UserStatus;
 import org.clean.system.param.UserAddParam;
 import org.clean.system.service.UserService;
+import org.clean.CleanException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Author("admin")
@@ -32,6 +30,11 @@ public class UserController {
     public User getById(@RequestParam("id") Long id){
         User user = userService.getById(id);
         return user;
+    }
+
+    @GetMapping("/getById2")
+    public Result<User> getById2(@RequestParam("id") Long id){
+         throw new CleanException(100,"模拟错误!");
     }
 
     //add

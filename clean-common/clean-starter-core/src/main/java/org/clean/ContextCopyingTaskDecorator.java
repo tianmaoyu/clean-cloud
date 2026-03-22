@@ -5,6 +5,9 @@ import org.springframework.core.task.TaskDecorator;
 
 import java.util.Map;
 
+/**
+ * 线程上下文复制装饰器 再极端场景也会出现错误
+ */
 public class ContextCopyingTaskDecorator implements TaskDecorator {
     
     @Override

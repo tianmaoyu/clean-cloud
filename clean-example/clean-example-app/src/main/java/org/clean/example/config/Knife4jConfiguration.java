@@ -24,7 +24,7 @@ public class Knife4jConfiguration {
                 .groupName("demo")
                 .select()
                 //这里指定Controller扫描包路径
-                .apis(RequestHandlerSelectors.basePackage("org.clean.controller"))
+                .apis(RequestHandlerSelectors.basePackage("org.clean.example.controller"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;

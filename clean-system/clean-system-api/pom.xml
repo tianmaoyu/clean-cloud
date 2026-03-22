@@ -10,6 +10,7 @@
     </parent>
     <artifactId>clean-system-api</artifactId>
     <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
     <dependencies>
 
         <dependency>
@@ -28,6 +29,12 @@
             <artifactId>swagger-annotations</artifactId>
             <version>1.6.6</version>
 
+        </dependency>
+        <dependency>
+            <groupId>org.clean</groupId>
+            <artifactId>clean-starter-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

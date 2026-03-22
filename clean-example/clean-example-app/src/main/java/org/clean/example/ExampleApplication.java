@@ -16,7 +16,7 @@ import java.net.InetAddress;
 @Slf4j
 @EnableAspectJAutoProxy
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"org.clean.system.feign"})
 @EnableScheduling
 @ComponentScan("org.clean.*")
 //@MapperScan( "org.clearexample.mapper")
