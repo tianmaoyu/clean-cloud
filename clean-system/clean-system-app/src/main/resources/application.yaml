@@ -4,7 +4,7 @@ spring:
   application:
     name: clean-system-service
   zipkin:
-    base-url: http://localhost:55548/  # Zipkin服务器地址
+    base-url: http://localhost:56157/  # Zipkin服务器地址
     sender:
       type: web  # 发送方式：web或rabbit、kafka等
   sleuth:
@@ -34,6 +34,7 @@ spring:
       discovery:
         server-addr: localhost:8848
         namespace: public
+        register-enabled: false # 启动关闭注册
       config:
         namespace: public
         server-addr: localhost:8848
