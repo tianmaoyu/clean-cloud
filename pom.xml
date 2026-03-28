@@ -27,6 +27,7 @@
         <module>clean-open-app</module>
         <module>clean-gateway-app</module>
         <module>clean-websocket-app</module>
+        <module>clean-monitor-app</module>
     </modules>
 
     <properties>

@@ -1,0 +1,15 @@
+package org.clean.monitor;
+
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@SpringBootApplication
+@EnableAdminServer  // 开启 Admin Server
+@EnableDiscoveryClient // 注册到 Nacos
+public class AdminServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(AdminServerApplication.class, args);
+    }
+}

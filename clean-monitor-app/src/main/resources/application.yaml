@@ -1,0 +1,18 @@
+#server:
+#  port: 9001
+#spring:
+#  application:
+#    name: clean-monitor-service
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: localhost:8848
+#        namespace: public
+#    loadbalancer:
+#      cache:
+#        ttl: 5s
+#
+##  security:
+##   user:
+##     name: admin
+##     password: 123456
