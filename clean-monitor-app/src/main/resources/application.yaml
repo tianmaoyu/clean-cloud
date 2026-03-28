@@ -16,3 +16,16 @@
 ##   user:
 ##     name: admin
 ##     password: 123456
+spring:
+  boot:
+    admin:
+      ui:
+        external-views:
+          - label: "Nacos 控制台"
+            url: http://localhost:8848/nacos
+            order: 100
+boot:
+  admin:
+    discovery:
+      enabled: true
+      ignored-services: "clean-monitor-service"
