@@ -38,7 +38,9 @@ spring:
       config:
         namespace: public
         server-addr: localhost:8848
-
+    loadbalancer:
+      cache:
+        ttl: 5s
 management:
   endpoint:
     metrics:

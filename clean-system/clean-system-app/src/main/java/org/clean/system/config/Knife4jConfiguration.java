@@ -22,4 +22,16 @@ public class Knife4jConfiguration {
                 .build();
         return docket;
     }
+    @Bean
+    public Docket actuatorApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Actuator")
+                .select()
+                .paths(PathSelectors.regex("/actuator/.*"))
+                .build()
+                .directModelSubstitute(org.springframework.boot.actuate.endpoint.web.Link.class,
+                        org.springframework.boot.actuate.endpoint.web.Link.class);
+    }
+
+
 }
