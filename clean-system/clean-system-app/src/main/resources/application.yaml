@@ -43,6 +43,8 @@ spring:
         ttl: 5s
 management:
   endpoint:
+    health:
+      show-details: always
     metrics:
       enabled: true
   endpoints:
