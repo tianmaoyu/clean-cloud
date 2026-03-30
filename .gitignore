@@ -39,3 +39,4 @@ build/
 logs
 .mvn
 .idea
+/Script/kafak/kafka_data/
