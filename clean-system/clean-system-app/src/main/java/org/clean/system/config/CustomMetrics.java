@@ -10,7 +10,7 @@ public class CustomMetrics {
     private final Counter requestCounter;
 
     public CustomMetrics(MeterRegistry registry) {
-        requestCounter = Counter.builder("myapp.requests.total")
+            requestCounter = Counter.builder("myapp.requests.total")
                 .description("Total number of requests")
                 .register(registry);
     }

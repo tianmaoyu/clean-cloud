@@ -1,9 +1,11 @@
 package org.clean.system.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.Counter;
 import lombok.extern.slf4j.Slf4j;
 import org.clean.Author;
 import org.clean.Result;
+import org.clean.system.config.CustomMetrics;
 import org.clean.system.entity.User;
 import org.clean.system.param.UserAddParam;
 import org.clean.system.service.UserService;
@@ -24,7 +26,14 @@ public class UserController {
     private ObjectMapper objectMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CustomMetrics customMetrics;
 
+
+    @GetMapping("/recordRequest")
+    public void recordRequest() {
+        customMetrics.recordRequest();
+    }
     @Author(value = "admin-1",date = "2020-09-01")
     @GetMapping("/getById")
     public User getById(@RequestParam("id") Long id){

@@ -29,3 +29,12 @@ boot:
     discovery:
       enabled: true
       ignored-services: "clean-monitor-service"
+
+
+alert:
+  metrics:
+    enabled: true
+    threshold: 10
+    interval: 5000  # 检查间隔（毫秒）
+    recipients:
+      - admin@example.com
