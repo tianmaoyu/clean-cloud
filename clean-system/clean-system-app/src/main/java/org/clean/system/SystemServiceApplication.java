@@ -36,19 +36,6 @@ public class SystemServiceApplication {
                 env.getProperty("spring.application.name"),
                 InetAddress.getLocalHost().getHostAddress(),
                 env.getProperty("server.port"));
-// // 启动后在注册
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(15000);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//            NacosServiceRegistry nacosServiceRegistry = application.getBean(NacosServiceRegistry.class);
-//            NacosRegistration registration=application.getBean(NacosRegistration.class);
-//            int port = env.getProperty("server.port", Integer.class);
-//            registration.setPort(port);
-//            nacosServiceRegistry.register(registration);
-//        }).start();
 
     }
 
