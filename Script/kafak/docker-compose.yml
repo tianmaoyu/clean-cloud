@@ -15,7 +15,7 @@ services:
       - kafka-net
     volumes:
       - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf:ro   # JAAS 配置（只读）
-      - ./kafka_data:/var/lib/kafka/data                                 # 数据持久化目录
+#      - ./kafka_data:/var/lib/kafka/data                                 # 数据持久化目录
     environment:
       # --- KRaft 基础配置 ---
       KAFKA_NODE_ID: 1
@@ -49,11 +49,7 @@ services:
       KAFKA_SUPER_USERS: User:admin;User:ANONYMOUS
 
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+
 
   kafka-ui:
     image: kafbat/kafka-ui:latest
