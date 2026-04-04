@@ -13,7 +13,6 @@ import java.util.Map;
 @Service
 public class MetricsScheduledTask {
 
-
     private final InstanceRepository instanceRepository;
     private final WebClient webClient;
 
